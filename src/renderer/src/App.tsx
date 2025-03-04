@@ -2,7 +2,7 @@ import SideMenu from "./components/SideMenu"
 import FileMenu from "./components/FileMenu/FileMenu"
 import Calendar from "./components/Calendar/Calendar"
 import Notes from "./components/Notes/Notes"
-import { useMenuController } from "./stores/useMenuController.js"
+import { useMenuController } from "./stores/useMenuStore.js"
 
 const Content = (): JSX.Element => {
   const menu = useMenuController((state:any) => state.menu)
