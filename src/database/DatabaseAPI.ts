@@ -35,9 +35,17 @@ const getFolders = (id: Number | null) => {
     }    
 }
 
-// const addFolder = () => {
-
-// }
+// adds a new folder into folders table, returns nothing
+const addFolder = (name: string, parent_id: number, type: number) => {
+    try {
+        const insertData = db.prepare("INSERT INTO folders (name, parent_id, type, open) VALUES (?, ?, ?, 0)")
+        insertData.run(name, parent_id, type)
+        return
+    } catch (err) {
+        console.error(err)
+        throw err
+    }
+}
 
 // const editFolder = () => {
 
@@ -66,5 +74,6 @@ const checkNameExists = (name: string, type: number) => {
 export {
     createTables,
     getFolders,
-    checkNameExists
+    addFolder,
+    checkNameExists,
 }

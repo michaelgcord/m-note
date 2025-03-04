@@ -9,6 +9,6 @@ interface InputObj {
 const folder = 0
 export const useFileMenuStore = create((set) => ({
     // Global states to control input
-    inputObj: {show: true, id: null, type: folder},
+    inputObj: {show: false, id: null, type: folder},
     setInputObj: (value : InputObj) => {set({ inputObj: value })}
 }))

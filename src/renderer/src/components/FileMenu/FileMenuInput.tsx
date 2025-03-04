@@ -3,12 +3,21 @@ import arrowRight from "../../assets/icons/arrow-right.svg"
 import file from "../../assets/icons/file.svg"
 import { useFileMenuStore } from "@renderer/stores/useFileMenuStore"
 
-interface FileMenuInputProps {
-    id: number | null
-    padding: string
+interface Folder {
+    id: number
+    parent_id: number | null
+    name: string
+    type: number
+    open: number
 }
 
-const FileMenuInput = ({id, padding} : FileMenuInputProps) : JSX.Element => {
+interface FileMenuInputProps {
+    id: number | null
+    padding: string,
+    setData: React.Dispatch<React.SetStateAction<Folder[]>>
+}
+
+const FileMenuInput = ({id, padding, setData} : FileMenuInputProps) : JSX.Element => {
     const inputRef = useRef<any>(null)
     const [input, setInput] = useState<string>("")
     const [showError, setShowError] = useState<boolean>(false)
@@ -64,6 +73,13 @@ const FileMenuInput = ({id, padding} : FileMenuInputProps) : JSX.Element => {
             setErrorMessage("A file or folder with this name already exists.")
             return
         }
+
+        //add new folder/file into database
+        window.api.addFolder(inputTrimmed, id, inputObj.type)
+
+        // refetch data with new folder and update state in FileMenuItem
+        const data = window.api.getFolders(id)
+        setData(data)
 
         removeInput()
     }

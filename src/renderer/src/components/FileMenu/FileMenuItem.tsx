@@ -38,7 +38,7 @@ const FileMenuItem = ({id, parent_id, name, type, open, depth} : FileMenuItemPro
         <div>
             <FileMenuName type={type} name={name} open={showFolder} setOpen={setShowFolder} padding={padding}/>
             <div className="file-menu-folder">
-                <FileMenuInput id={id} padding={inputPadding}/>
+                <FileMenuInput id={id} padding={inputPadding} setData={setData}/>
                 <div className="file-menu-vertical-line" style={{marginLeft: padding}}/>
                 {(showFolder && type === folder) ? data.map((item) => {
                     return (

@@ -21,7 +21,7 @@ const FileMenuList = (): JSX.Element => {
 
     return (
         <div className="file-menu-list">
-            <FileMenuInput id={null} padding="0px"/>
+            <FileMenuInput id={null} padding="0px" setData={setData}/>
             {data.map((item) => {
                 return (
                     <div key={item.id}>

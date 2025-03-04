@@ -7,8 +7,6 @@ const FileMenuTitle = (): JSX.Element => {
     const inputObj = useFileMenuStore((state:any) => state.inputObj)
 
     const setInputType = (type: number) => {
-        console.log(type)
-        console.log(inputObj)
         setInputObj({...inputObj, show: true, type: type})
     }
 

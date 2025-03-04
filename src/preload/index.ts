@@ -2,12 +2,14 @@ import { contextBridge } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 import { 
   getFolders,
+  addFolder,
   checkNameExists
 } from '../database/DatabaseAPI'
 
 // Custom APIs for renderer
 const api = {
   getFolders: getFolders,
+  addFolder: addFolder,
   checkNameExists: checkNameExists
 }
 
