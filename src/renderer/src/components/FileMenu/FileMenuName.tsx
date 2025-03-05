@@ -54,8 +54,10 @@ const FileMenuName = ({id, parent_id, setParentData, type, name, open, setOpen, 
         if (type === 'file') return // no need to toggle for files
         if (open === 1) {
             setOpen(0)
+            window.api.editFolder(parent_id, name, 0, id)
         } else {
             setOpen(1)
+            window.api.editFolder(parent_id, name, 1, id)
         }
     }
 
@@ -75,7 +77,8 @@ const FileMenuName = ({id, parent_id, setParentData, type, name, open, setOpen, 
     }
 
     const setMouse = () => {
-        setMouseObj({...mouseObj, isDragging: true, id: id, parent_id: parent_id, setParentData: setParentData, name: name})
+        // setMouseObj({...mouseObj, isDragging: true, id: id, parent_id: parent_id, setParentData: setParentData, name: name})
+        setMouseObj({...mouseObj, isDragging: true, folder: {id: id, parent_id: parent_id, setParentData: setParentData, name: name, type: type}})
     }
 
     const handleMouseDown = () => {

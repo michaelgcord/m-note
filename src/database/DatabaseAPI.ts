@@ -88,6 +88,40 @@ const checkNameExists = (name: string, type: string) => {
     }
 }
 
+// Checks if findID is a subfolder of id
+const checkSubFolders = (id: number, findID: number) => {
+    let found = false
+    const findFolder = (id: number) => {
+        const folders = getFolders(id)
+        for (let i = 0; i < folders.length; i++) {
+            if (folders[i].id === findID) {
+                found = true
+                return
+            }
+            if (!found) {
+                findFolder(folders[i].id)
+            }
+        }
+    }
+    findFolder(id)
+    return found
+}
+
+const checkFolderDepth = (id: number) => {
+    let maxDepth = 1
+    const getFolderDepth = (id: number, depth: number) => {
+        if (maxDepth <= depth) {
+            maxDepth = depth
+        }
+        const folders = getFolders(id)
+        for (let i = 0; i < folders.length; i++) {
+            getFolderDepth(folders[i].id, depth+1)
+        }
+    }
+    getFolderDepth(id, 1)
+    return maxDepth
+}
+
 export {
     createTables,
     getFolders,
@@ -95,4 +129,6 @@ export {
     addFolder,
     editFolder,
     checkNameExists,
+    checkSubFolders,
+    checkFolderDepth,
 }

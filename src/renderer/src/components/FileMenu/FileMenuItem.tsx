@@ -36,15 +36,42 @@ const FileMenuItem = ({id, parent_id, setParentData, name, type, open, depth} : 
     }, [])
 
     const updateFolders = () => {
-        const result = window.api.getSingleFolder(mouseObj.id)
+        const result = window.api.getSingleFolder(mouseObj.folder.id)
         window.api.editFolder(id, result.name, result.open, result.id)
 
-        mouseObj.setParentData(window.api.getFolders(mouseObj.parent_id))
+        mouseObj.folder.setParentData(window.api.getFolders(mouseObj.folder.parent_id))
         setData(window.api.getFolders(id))
+    }
+
+    const checkConstraints = () => {
+        console.log('Checking constraints...')
+        if (type != 'folder') {
+            console.error("ERROR: Files cannot contain folders.")
+            return false
+        }
+        if (id === mouseObj.folder.id) {
+            console.error("ERROR: Folders can't be nested into themselves.")
+            return false
+        }
+        if (id === mouseObj.folder.parent_id) {
+            console.error("ERROR: Folder already exists inside this folder.")
+            return false
+        }
+        if (window.api.checkSubFolders(mouseObj.folder.id, id)) {
+            console.error("ERROR: Folder cannot be nested into its subfolders")
+            return false
+        }
+        const maxDepth = 4
+        if (depth + window.api.checkFolderDepth(mouseObj.folder.id) >= maxDepth) {
+            console.error("ERROR: Folder cannot go past a depth of 4")
+            return false
+        }
+        return true
     }
 
     const handleMouseUp = () => {
         if (mouseObj.isDragging === false) return
+        if (!checkConstraints()) return
 
         updateFolders()
     }

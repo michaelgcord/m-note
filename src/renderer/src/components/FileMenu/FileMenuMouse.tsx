@@ -31,7 +31,7 @@ const FileMenuMouse = () : JSX.Element => {
         <>
         {mouseObj.isDragging
             ? <div className="file-menu-mouse" style={{left: mouseObj.x + 15, top: mouseObj.y + 15}}>
-                {mouseObj.name}
+                {mouseObj.folder.name}
             </div>
             : <></>
         }
