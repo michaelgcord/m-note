@@ -7,7 +7,7 @@ interface Folder {
     id: number
     parent_id: number | null
     name: string
-    type: number
+    type: string
     open: number
 }
 
@@ -101,7 +101,7 @@ const FileMenuInput = ({id, padding, setData} : FileMenuInputProps) : JSX.Elemen
         <>
         {(inputObj.id === id && inputObj.show) ?
             <div className="file-menu-input-container" style={{paddingLeft: padding}}>
-                {inputObj.type === 0
+                {inputObj.type === 'folder'
                     ? <img src={arrowRight} alt="" height={26}/>
                     : <div style={{height: '26px', width: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><img src={file} alt="file" height={16}/></div>
                 }

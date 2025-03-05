@@ -6,7 +6,7 @@ interface Folder {
     id: number
     parent_id: number | null
     name: string
-    type: number
+    type: string
     open: number
 }
 
@@ -28,6 +28,7 @@ const FileMenuList = (): JSX.Element => {
                     <FileMenuItem
                         id={item.id}
                         parent_id={item.parent_id}
+                        setParentData={setData}
                         name={item.name}
                         type={item.type}
                         open={item.open}

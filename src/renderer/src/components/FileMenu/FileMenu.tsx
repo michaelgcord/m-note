@@ -1,6 +1,7 @@
 import FileMenuTitle from "./FileMenuTitle"
 import LineDivider from "../Helper/LineDivider"
 import FileMenuList from "./FileMenuList"
+import FileMenuMouse from "./FileMenuMouse"
 
 const FileMenu = () : JSX.Element => {
     return (
@@ -8,6 +9,7 @@ const FileMenu = () : JSX.Element => {
             <FileMenuTitle />
             <LineDivider />
             <FileMenuList />
+            <FileMenuMouse />
         </div>
     )
 }

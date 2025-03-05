@@ -77,3 +77,8 @@
     z-index: 3;
     color: #ffffff;
 }
+
+.file-menu-mouse {
+    position: absolute;
+    z-index: 3;
+}

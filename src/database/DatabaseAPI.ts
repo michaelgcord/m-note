@@ -6,7 +6,7 @@ const createTables = () => {
             id INTEGER PRIMARY KEY,
             parent_id INTEGER,
             name STRING NOT NULL COLLATE NOCASE,
-            type INTEGER,
+            type TEXT,
             open INTEGER,
             UNIQUE(type, name)
         )
@@ -24,7 +24,7 @@ const getFolders = (id: Number | null) => {
         const query = `
             SELECT * FROM folders
             WHERE parent_id is ?
-            ORDER BY type ASC, name
+            ORDER BY type DESC, name
         `
         const preparedQuery = db.prepare(query)
         const rowList = preparedQuery.all(id)
@@ -35,8 +35,19 @@ const getFolders = (id: Number | null) => {
     }    
 }
 
+const getSingleFolder = (id: number) => {
+    try {
+        const query = db.prepare("SELECT * FROM folders where id is ?")
+        const result = query.get(id)
+        return result
+    } catch (err) {
+        console.error(err)
+        throw err
+    }
+}
+
 // adds a new folder into folders table, returns nothing
-const addFolder = (name: string, parent_id: number, type: number) => {
+const addFolder = (name: string, parent_id: number, type: string) => {
     try {
         const insertData = db.prepare("INSERT INTO folders (name, parent_id, type, open) VALUES (?, ?, ?, 0)")
         insertData.run(name, parent_id, type)
@@ -47,15 +58,21 @@ const addFolder = (name: string, parent_id: number, type: number) => {
     }
 }
 
-// const editFolder = () => {
-
-// }
+const editFolder = (parent_id: number, name: string, open: number, id: number) => {
+    try {
+        const query = db.prepare("UPDATE folders SET (parent_id, name, open) = (?, ?, ?) WHERE id = ?")
+        query.run(parent_id, name, open, id)
+    } catch (err) {
+        console.error(err)
+        throw err
+    }
+}
 
 // const deleteFolder = () => {
 
 // }
 
-const checkNameExists = (name: string, type: number) => {
+const checkNameExists = (name: string, type: string) => {
     try {
         const query = "SELECT * FROM folders WHERE name = ? AND type = ?"
         const readQuery = db.prepare(query)
@@ -74,6 +91,8 @@ const checkNameExists = (name: string, type: number) => {
 export {
     createTables,
     getFolders,
+    getSingleFolder,
     addFolder,
+    editFolder,
     checkNameExists,
 }
