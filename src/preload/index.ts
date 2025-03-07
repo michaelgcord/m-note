@@ -5,7 +5,10 @@ import {
   getSingleFolder,
   addFolder,
   editFolder,
-  checkNameExists
+  deleteFolder,
+  checkNameExists,
+  checkSubFolders,
+  checkFolderDepth,
 } from '../database/DatabaseAPI'
 
 // Custom APIs for renderer
@@ -14,7 +17,10 @@ const api = {
   getSingleFolder: getSingleFolder,
   addFolder: addFolder,
   editFolder: editFolder,
-  checkNameExists: checkNameExists
+  deleteFolder: deleteFolder,
+  checkNameExists: checkNameExists,
+  checkSubFolders: checkSubFolders,
+  checkFolderDepth: checkFolderDepth,
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

@@ -3,6 +3,7 @@ import arrowRight from "../../assets/icons/arrow-right.svg"
 import file from "../../assets/icons/file.svg"
 import { useFileMenuStore } from "@renderer/stores/useFileMenuStore"
 import { useEffect, useState } from "react"
+import FileMenuContextMenu from "./FileMenuContextMenu"
 
 interface Folder {
     id: number
@@ -21,27 +22,29 @@ interface FileMenuNameProps {
     open: number
     setOpen: React.Dispatch<React.SetStateAction<number>>,
     padding: string
+    setShowRename: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 interface Move {
     x: number
     y: number
-    isMouseDown: boolean
+    isLeftMouseDown: boolean
 }
 
-const FileMenuName = ({id, parent_id, setParentData, type, name, open, setOpen, padding} : FileMenuNameProps) : JSX.Element => {
+const FileMenuName = ({id, parent_id, setParentData, type, name, open, setOpen, padding, setShowRename} : FileMenuNameProps) : JSX.Element => {
     const inputObj = useFileMenuStore((state:any) => state.inputObj)
     const setInputObj = useFileMenuStore((state:any) => state.setInputObj)
     const highlightObj = useFileMenuStore((state:any) => state.highlightObj)
     const setHighlightObj = useFileMenuStore((state:any) => state.setHighlightObj)
     const mouseObj = useFileMenuStore((state:any) => state.mouseObj)
     const setMouseObj = useFileMenuStore((state:any) => state.setMouseObj)
-    const [checkMove, setCheckMove] = useState<Move>({x: 0, y: 0, isMouseDown: false})
+    const [checkMove, setCheckMove] = useState<Move>({x: 0, y: 0, isLeftMouseDown: false})
+    const [showContext, setShowContext] = useState<boolean>(false)
 
     // reset check move on mouse up
     useEffect(() => {
         const reset = () => {
-            setCheckMove({...checkMove, isMouseDown: false})
+            setCheckMove({...checkMove, isLeftMouseDown: false})
         }
         window.addEventListener('mouseup', reset)
         return () => {
@@ -54,8 +57,10 @@ const FileMenuName = ({id, parent_id, setParentData, type, name, open, setOpen, 
         if (type === 'file') return // no need to toggle for files
         if (open === 1) {
             setOpen(0)
+            window.api.editFolder(parent_id, name, 0, id)
         } else {
             setOpen(1)
+            window.api.editFolder(parent_id, name, 1, id)
         }
     }
 
@@ -70,20 +75,22 @@ const FileMenuName = ({id, parent_id, setParentData, type, name, open, setOpen, 
     }
 
     const handleClick = () => {
+        if (showContext) return // don't trigger when context menu is open
         toggleOpen()
         selectFolder()
     }
 
     const setMouse = () => {
-        setMouseObj({...mouseObj, isDragging: true, id: id, parent_id: parent_id, setParentData: setParentData, name: name})
+        setMouseObj({...mouseObj, isDragging: true, folder: {id: id, parent_id: parent_id, setParentData: setParentData, name: name, type: type}})
     }
 
-    const handleMouseDown = () => {
-        setCheckMove({...checkMove, isMouseDown: true, x: mouseObj.x, y: mouseObj.y})
+    const handleMouseDown = (e:any) => {
+        if (e.button === 2) return // return on right click
+        setCheckMove({...checkMove, isLeftMouseDown: true, x: mouseObj.x, y: mouseObj.y})
     }
 
     const handleMouseMove = () => {
-        if (checkMove.isMouseDown) {
+        if (checkMove.isLeftMouseDown) {
             const range = 3
             if (
                 (mouseObj.x > checkMove.x + range) ||
@@ -96,8 +103,29 @@ const FileMenuName = ({id, parent_id, setParentData, type, name, open, setOpen, 
         }
     }
 
+    const handleMouseOver = () => {
+        setMouseObj({...mouseObj, isHoveringFileItem: true})
+    }
+
+    const handleMouseLeave = () => {
+        setMouseObj({...mouseObj, isHoveringFileItem: false})
+    }
+
+    const handleContextMenu = () => {
+        setShowContext(true)
+    }
+
     return (
-        <div onClick={handleClick} onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} className="file-menu-name unselectable" style={{paddingLeft: padding, backgroundColor: highlightObj.leftClickID === id ? "gray" : ""}}>
+        <div 
+            onClick={handleClick} 
+            onMouseDown={handleMouseDown} 
+            onMouseMove={handleMouseMove} 
+            onMouseOver={handleMouseOver}
+            onMouseLeave={handleMouseLeave}
+            onContextMenu={handleContextMenu}
+            className="file-menu-name unselectable" 
+            style={{paddingLeft: padding, backgroundColor: highlightObj.leftClickID === id ? "gray" : ""}}
+        >
             {type === 'file'
                 ? <div style={{height: '26px', width: '26px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><img src={file} alt="file" height={16}/></div>
                 : open === 1 
@@ -105,6 +133,14 @@ const FileMenuName = ({id, parent_id, setParentData, type, name, open, setOpen, 
                     : <img src={arrowRight} alt="arrow-right" height={26}/>
             }
             <div>{name}</div>
+            <FileMenuContextMenu
+                id={id}
+                parent_id={parent_id}
+                setParentData={setParentData} 
+                showContext={showContext} 
+                setShowContext={setShowContext}
+                setShowRename={setShowRename}
+            />
         </div>
     )
 }

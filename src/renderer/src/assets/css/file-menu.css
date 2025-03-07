@@ -24,11 +24,17 @@
     flex-grow: 1;
     height: 1px;
     width: 100%;
+    /* border: solid red 1px; */
+}
+
+.file-menu-item {
+    /* position: relative; */
 }
 
 .file-menu-name {
     display: flex;
     align-items: center;
+    position: relative;
 }
 
 .file-menu-folder {
@@ -81,4 +87,14 @@
 .file-menu-mouse {
     position: absolute;
     z-index: 3;
+}
+
+.file-menu-context-menu {
+    all: unset;
+    position: absolute;
+    z-index: 3;
+    background-color: #eeeeee;
+    border: solid black 1px;
+    width: 200px;
+    padding-left: 30px;
 }

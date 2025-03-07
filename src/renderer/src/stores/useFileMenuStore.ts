@@ -18,12 +18,18 @@ interface HighlightObj {
     leftClickID: number | null
 }
 
-interface MouseObj {
+interface MouseFolderObj {
     id: number | null
     parent_id: number | null
     setParentData: React.Dispatch<React.SetStateAction<Folder[]>> | null
-    name: string
+    name: string | null
+    type: string | null 
+}
+
+interface MouseObj {
+    folder: MouseFolderObj
     isDragging: boolean
+    isHoveringFileItem: boolean
     x: number
     y: number
 }
@@ -38,6 +44,18 @@ export const useFileMenuStore = create((set) => ({
     setHighlightObj: (value : HighlightObj) => {set({ highlightObj: value })},
 
     // Global Obj to control mouse events
-    mouseObj: {id: null, parent_id: null, setParentData: null, name: 'n/a', isDragging: false, x: 0, y: 0},
+    mouseObj: {
+        folder: {
+            id: null, 
+            parent_id: null, 
+            setParentData: null, 
+            name: 'n/a', 
+            type: null
+        }, 
+        isDragging: false,
+        isHoveringFileItem: false,
+        x: 0, 
+        y: 0
+    },
     setMouseObj: (value : MouseObj) => {set({ mouseObj: value })}
 }))
