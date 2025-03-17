@@ -47,6 +47,7 @@ const FileMenuContextMenu = ({showContext, setShowContext, id, parent_id, setPar
     }
 
     const handleDelete = () => {
+        window.api.deleteNotes(id)
         window.api.deleteFolder(id)
         setParentData(window.api.getFolders(parent_id))
         setShowContext(false)

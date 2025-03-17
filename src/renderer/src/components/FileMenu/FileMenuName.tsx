@@ -2,6 +2,7 @@ import arrowDown from "../../assets/icons/arrow-down.svg"
 import arrowRight from "../../assets/icons/arrow-right.svg"
 import file from "../../assets/icons/file.svg"
 import { useFileMenuStore } from "@renderer/stores/useFileMenuStore"
+import { useNotesStore } from "@renderer/stores/useNotesStore"
 import { useEffect, useState } from "react"
 import FileMenuContextMenu from "./FileMenuContextMenu"
 
@@ -41,6 +42,9 @@ const FileMenuName = ({id, parent_id, setParentData, type, name, open, setOpen, 
     const [checkMove, setCheckMove] = useState<Move>({x: 0, y: 0, isLeftMouseDown: false})
     const [showContext, setShowContext] = useState<boolean>(false)
 
+    const notesObj = useNotesStore((state:any) => state.notesObj)
+    const setNotesObj = useNotesStore((state:any) => state.setNotesObj)
+
     // reset check move on mouse up
     useEffect(() => {
         const reset = () => {
@@ -78,6 +82,11 @@ const FileMenuName = ({id, parent_id, setParentData, type, name, open, setOpen, 
         if (showContext) return // don't trigger when context menu is open
         toggleOpen()
         selectFolder()
+
+        // select file and fetch notes associated to file id inside notes menu
+        if (type === 'file') {
+            setNotesObj({...notesObj, name: name, file_id: id})
+        }
     }
 
     const setMouse = () => {

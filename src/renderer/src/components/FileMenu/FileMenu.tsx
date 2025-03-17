@@ -7,7 +7,7 @@ const FileMenu = () : JSX.Element => {
     return (
         <div className="file-menu-container">
             <FileMenuTitle />
-            <LineDivider />
+            <LineDivider mode="horizontal"/>
             <FileMenuList />
             <FileMenuMouse />
         </div>

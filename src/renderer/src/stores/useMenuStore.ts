@@ -5,7 +5,7 @@ import {create} from "zustand"
     2. notes
     3. data
 */
-export const useMenuController = create((set) => ({
+export const useMenuStore = create((set) => ({
     menu: 'notes',
     setMenu: (value:string) => {set({ menu: value })},
 }))

@@ -9,6 +9,10 @@ import {
   checkNameExists,
   checkSubFolders,
   checkFolderDepth,
+  getNotes,
+  addNote,
+  editNote,
+  deleteNotes,
 } from '../database/DatabaseAPI'
 
 // Custom APIs for renderer
@@ -21,6 +25,10 @@ const api = {
   checkNameExists: checkNameExists,
   checkSubFolders: checkSubFolders,
   checkFolderDepth: checkFolderDepth,
+  getNotes: getNotes,
+  addNote: addNote,
+  editNote: editNote,
+  deleteNotes: deleteNotes,
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

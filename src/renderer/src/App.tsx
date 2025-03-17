@@ -2,10 +2,10 @@ import SideMenu from "./components/SideMenu"
 import FileMenu from "./components/FileMenu/FileMenu"
 import Calendar from "./components/Calendar/Calendar"
 import Notes from "./components/Notes/Notes"
-import { useMenuController } from "./stores/useMenuStore.js"
+import { useMenuStore } from "./stores/useMenuStore.js"
 
 const Content = (): JSX.Element => {
-  const menu = useMenuController((state:any) => state.menu)
+  const menu = useMenuStore((state:any) => state.menu)
 
   return (
     <>
@@ -24,7 +24,7 @@ const App = (): JSX.Element => {
     <div className="app-container">
       <SideMenu />
       <FileMenu />
-      {/* <Content /> */}
+      <Content />
     </div>
   )
 }
