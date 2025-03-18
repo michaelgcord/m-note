@@ -23,7 +23,7 @@ const NotesBar = () : JSX.Element => {
             globalEditor.chain().focus().toggleStrike().run()
         }
         if (format === 'heading') {
-            globalEditor.chain().focus().toggleHeading({ level: 2 }).run()
+            globalEditor.chain().focus().toggleHeading({ level: 1 }).run()
         }
     }
 

@@ -1,4 +1,5 @@
 import { EditorContent, useEditor } from '@tiptap/react'
+import Document from '@tiptap/extension-document'
 import Image from '@tiptap/extension-image'
 import FileHandler from '@tiptap-pro/extension-file-handler'
 import Underline from '@tiptap/extension-underline'
@@ -6,13 +7,20 @@ import StarterKit from '@tiptap/starter-kit'
 import { useEffect, useState } from 'react'
 import { useNotesStore } from '@renderer/stores/useNotesStore'
 
+const CustomDocument = Document.extend({
+	content: 'heading block*',
+  })
+
 const Tiptap = () : JSX.Element => {
     const notesObj = useNotesStore((state:any) => state.notesObj)
     const setGlobalEditor = useNotesStore((state:any) => state.setGlobalEditor)
 
 	const editor = useEditor({
 		extensions: [
-		  StarterKit,
+		  CustomDocument,
+		  StarterKit.configure({
+			document: false,
+		  }),
           Underline,
 		  Image.configure({ inline: true, allowBase64: true }),
 		  FileHandler.configure({
@@ -61,8 +69,14 @@ const Tiptap = () : JSX.Element => {
         if (!editor) return
         const onUpdate = () => {
             if (!notesObj.note_id) return
+			const parser = new DOMParser()
+			
             const html = editor.getHTML()
-			console.log(editor.getJSON())
+
+			const doc = parser.parseFromString(html, "text/html").documentElement.textContent;
+
+			console.log(html)
+			console.log(doc)
             const date = new Date()
             var sqlDate = date.toISOString();
             window.api.editNote(notesObj.note_id, sqlDate, html)
