@@ -1,6 +1,7 @@
 import { useNotesStore } from "@renderer/stores/useNotesStore"
 import { useEffect, useState } from "react"
 import { convert } from 'html-to-text'
+import { EditorState } from 'prosemirror-state';
 
 interface NotesItemProps {
     id: number
@@ -26,11 +27,9 @@ const NotesItem = ({id, html_content} : NotesItemProps) : JSX.Element => {
                 }
             ],
         })
-        console.log(text)
         let lines = text.split('\n')
         let first = ""
         let second = ""
-        // console.log(lines)
         for (let i = 0; i < lines.length; i++) {
             if (lines[i] == "") { // all empty strings are skipped
                 continue
@@ -65,6 +64,15 @@ const NotesItem = ({id, html_content} : NotesItemProps) : JSX.Element => {
     const handleClick = () => {
         setNotesObj({...notesObj, note_id: id, setHtml: setHtml})
         globalEditor.commands.setContent(html)
+
+        // Reset tiptap state to start a new fresh history
+        const newEditorState = EditorState.create({
+            doc: globalEditor.state.doc,
+            plugins: globalEditor.state.plugins,
+            schema: globalEditor.state.schema
+        })
+        globalEditor.view.updateState(newEditorState);
+
         console.log('Note id has been set.')
     }
 
