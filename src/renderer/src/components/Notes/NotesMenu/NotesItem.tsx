@@ -1,5 +1,6 @@
 import { useNotesStore } from "@renderer/stores/useNotesStore"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { convert } from 'html-to-text'
 
 interface NotesItemProps {
     id: number
@@ -11,6 +12,54 @@ const NotesItem = ({id, html_content} : NotesItemProps) : JSX.Element => {
     const setNotesObj = useNotesStore((state:any) => state.setNotesObj)
     const globalEditor = useNotesStore((state:any) => state.globalEditor)
     const [html, setHtml] = useState<string>(html_content)
+    const [name, setName] = useState<string>('New Note')
+    const [description, setDescription] = useState<string>('No Additional Text')
+
+    const getNameAndDescription = (html: string) => {
+        console.log(html)
+        let text = convert(html, {
+            wordwrap: false,
+            selectors: [
+                {
+                    selector: 'h1',
+                    options: {uppercase: false}
+                }
+            ],
+        })
+        console.log(text)
+        let lines = text.split('\n')
+        let first = ""
+        let second = ""
+        // console.log(lines)
+        for (let i = 0; i < lines.length; i++) {
+            if (lines[i] == "") { // all empty strings are skipped
+                continue
+            }
+            if (first) { // set second string only after first is found
+                second = lines[i]
+                setDescription(second)
+                return
+            }
+            first = lines[i] // set the first string we see to first
+            setName(first)
+        }
+        if (first === "") {
+            setName('New Note')
+        }
+        if (second === "") {
+            setDescription('No Additional Text')
+        }
+        return
+    }
+
+    useEffect(() => {
+        if (!html) {
+            setName("New Note")
+            setDescription("No additional text")
+            return
+        }
+        getNameAndDescription(html)
+    }, [html])
 
     // Set note id and render its content into editor
     const handleClick = () => {
@@ -21,8 +70,8 @@ const NotesItem = ({id, html_content} : NotesItemProps) : JSX.Element => {
 
     return (
         <div onClick={handleClick} className="notes-menu-item">
-            <div className="note-name">Lorem Ipsum</div>
-            <div className="note-date">3/17/2025 <span className="note-description">More stuff blah blah blah blah</span></div>
+            <div className="note-name">{name}</div>
+            <div className="note-date">3/17/2025 <span className="note-description">{description}</span></div>
         </div>
     )
 }

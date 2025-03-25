@@ -1,11 +1,32 @@
 import { EditorContent, useEditor } from '@tiptap/react'
+import { Extension } from '@tiptap/core'
 import Document from '@tiptap/extension-document'
+import Paragraph from '@tiptap/extension-paragraph'
+import Heading from '@tiptap/extension-heading'
+import Text from '@tiptap/extension-text'
+import Bold from '@tiptap/extension-bold'
+import Italic from '@tiptap/extension-italic'
+import Strike from '@tiptap/extension-strike'
+import Underline from '@tiptap/extension-underline'
+import BulletList from '@tiptap/extension-bullet-list'
+import ListItem from '@tiptap/extension-list-item'
 import Image from '@tiptap/extension-image'
 import FileHandler from '@tiptap-pro/extension-file-handler'
-import Underline from '@tiptap/extension-underline'
-import StarterKit from '@tiptap/starter-kit'
 import { useEffect, useState } from 'react'
 import { useNotesStore } from '@renderer/stores/useNotesStore'
+
+const Tab = Extension.create({
+	name: 'Tab',
+  
+	addKeyboardShortcuts() {
+	  return {
+		Tab: () => {
+		  return this.editor.commands.insertContent('\t')
+		}
+	  }
+	}
+  
+  })
 
 const CustomDocument = Document.extend({
 	content: 'heading block*',
@@ -17,11 +38,7 @@ const Tiptap = () : JSX.Element => {
 
 	const editor = useEditor({
 		extensions: [
-		  CustomDocument,
-		  StarterKit.configure({
-			document: false,
-		  }),
-          Underline,
+		  CustomDocument, Paragraph, Heading, Text, Bold, Italic, Strike, Underline, ListItem, BulletList, Tab,
 		  Image.configure({ inline: true, allowBase64: true }),
 		  FileHandler.configure({
 			allowedMimeTypes: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
@@ -69,14 +86,7 @@ const Tiptap = () : JSX.Element => {
         if (!editor) return
         const onUpdate = () => {
             if (!notesObj.note_id) return
-			const parser = new DOMParser()
-			
             const html = editor.getHTML()
-
-			const doc = parser.parseFromString(html, "text/html").documentElement.textContent;
-
-			console.log(html)
-			console.log(doc)
             const date = new Date()
             var sqlDate = date.toISOString();
             window.api.editNote(notesObj.note_id, sqlDate, html)
@@ -97,7 +107,7 @@ const Tiptap = () : JSX.Element => {
     }, [])
 
     return (
-        <EditorContent className="tiptap-editor" editor={editor} />
+        <EditorContent spellCheck="false" className="tiptap-editor" editor={editor} />
     )
 }
 
