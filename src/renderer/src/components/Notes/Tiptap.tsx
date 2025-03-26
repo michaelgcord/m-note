@@ -9,7 +9,6 @@ import { useNotesStore } from '@renderer/stores/useNotesStore'
 
 const Tab = Extension.create({
 	name: 'Tab',
-  
 	addKeyboardShortcuts() {
 	  return {
 		Tab: () => {
@@ -17,7 +16,6 @@ const Tab = Extension.create({
 		}
 	  }
 	}
-  
   })
 
 const CustomDocument = Document.extend({
@@ -89,7 +87,10 @@ const Tiptap = () : JSX.Element => {
             const date = new Date()
             var sqlDate = date.toISOString();
             window.api.editNote(notesObj.note_id, sqlDate, html)
-            notesObj.setHtml(html)                
+            notesObj.setHtml(html)
+			const time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
+			console.log(time)
+			notesObj.setDate(time)
         }
         editor.on('update', onUpdate)
 

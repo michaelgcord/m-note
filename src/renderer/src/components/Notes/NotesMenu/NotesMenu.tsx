@@ -7,6 +7,7 @@ import LineDivider from "@renderer/components/Helper/LineDivider"
 interface Notes {
     id: number
     html_content: string
+    last_date_edited: string
 }
 
 const NotesMenu = () : JSX.Element => {
@@ -30,6 +31,7 @@ const NotesMenu = () : JSX.Element => {
                         <NotesItem 
                             id={item.id}
                             html_content={item.html_content}
+                            last_date_edited={item.last_date_edited}
                         />
                     </div>
                 )

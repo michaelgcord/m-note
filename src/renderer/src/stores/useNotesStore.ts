@@ -6,10 +6,11 @@ interface NotesObj {
     file_id: number | null
     note_id: number | null
     setHtml: React.Dispatch<React.SetStateAction<string>> | null
+    setDate: React.Dispatch<React.SetStateAction<string>> | null
 }
 
 export const useNotesStore = create((set) => ({
-    notesObj: {name: 'M Note', file_id: null, note_id: null, setHtml: null},
+    notesObj: {name: 'M Note', file_id: null, note_id: null, setHtml: null, setDate: null},
     setNotesObj: (value : NotesObj) => {set({notesObj: value})},
 
     globalEditor: null,

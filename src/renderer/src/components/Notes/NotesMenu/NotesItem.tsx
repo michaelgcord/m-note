@@ -6,18 +6,20 @@ import { EditorState } from 'prosemirror-state';
 interface NotesItemProps {
     id: number
     html_content: string // prob need to change this to correct data
+    last_date_edited: string
 }
 
-const NotesItem = ({id, html_content} : NotesItemProps) : JSX.Element => {
+const NotesItem = ({id, html_content, last_date_edited} : NotesItemProps) : JSX.Element => {
     const notesObj = useNotesStore((state:any) => state.notesObj)
     const setNotesObj = useNotesStore((state:any) => state.setNotesObj)
     const globalEditor = useNotesStore((state:any) => state.globalEditor)
     const [html, setHtml] = useState<string>(html_content)
+    const [date, setDate] = useState<string>(last_date_edited)
     const [name, setName] = useState<string>('New Note')
     const [description, setDescription] = useState<string>('No Additional Text')
+    const [firstRender, setFirstRender] = useState<boolean>(true)
 
     const getNameAndDescription = (html: string) => {
-        console.log(html)
         let text = convert(html, {
             wordwrap: false,
             selectors: [
@@ -51,18 +53,30 @@ const NotesItem = ({id, html_content} : NotesItemProps) : JSX.Element => {
         return
     }
 
-    useEffect(() => {
-        if (!html) {
-            setName("New Note")
-            setDescription("No additional text")
-            return
+    const getDate = () => {
+        const currentDate = new Date().toLocaleDateString('en-US')
+        const lastDate = new Date(date).toLocaleDateString('en-US')
+
+        if (currentDate === lastDate) {
+            setDate(new Date(date).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }))
+        } else {
+            setDate(lastDate)
         }
+    }
+
+    // on note update
+    useEffect(() => {
+        if (firstRender) {
+            getDate()
+            setFirstRender(false)
+        }
+        // We have to filter through html content to find the name and description
         getNameAndDescription(html)
     }, [html])
 
     // Set note id and render its content into editor
     const handleClick = () => {
-        setNotesObj({...notesObj, note_id: id, setHtml: setHtml})
+        setNotesObj({...notesObj, note_id: id, setHtml: setHtml, setDate: setDate})
         globalEditor.commands.setContent(html)
 
         // Reset tiptap state to start a new fresh history
@@ -79,7 +93,7 @@ const NotesItem = ({id, html_content} : NotesItemProps) : JSX.Element => {
     return (
         <div onClick={handleClick} className="notes-menu-item">
             <div className="note-name">{name}</div>
-            <div className="note-date">3/17/2025 <span className="note-description">{description}</span></div>
+            <div className="note-date">{date} <span className="note-description">{description}</span></div>
         </div>
     )
 }

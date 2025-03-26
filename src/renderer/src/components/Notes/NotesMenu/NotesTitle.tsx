@@ -3,6 +3,7 @@ import noteAdd from "../../../assets/icons/note-add.svg"
 interface Notes {
     id: number
     html_content: string
+    last_date_edited: string
 }
 
 interface NotesTitleProps {
