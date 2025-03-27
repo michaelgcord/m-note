@@ -2,6 +2,7 @@ import NotesMenu from "./NotesMenu/NotesMenu"
 import LineDivider from "../Helper/LineDivider"
 import NotesBar from "./NotesBar"
 import Tiptap from "./Tiptap"
+import TimeCreated from "./TimeCreated"
 
 const Notes = (): JSX.Element => {
     return (
@@ -11,6 +12,7 @@ const Notes = (): JSX.Element => {
             <div className="notes-right">
                 <NotesBar />
                 <LineDivider mode="horizontal"/>
+                <TimeCreated />
                 <Tiptap />
             </div>
         </div>

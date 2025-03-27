@@ -56,6 +56,7 @@
     padding: 4px;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 .notes-bar {
@@ -87,7 +88,7 @@
     flex-grow: 1;
     /* border: solid red 1px; */
     overflow-y: auto;
-    padding: 8px;
+    padding: 24px 8px 8px 8px;
 }
 
 .tiptap ol {
@@ -96,4 +97,17 @@
 
 .tiptap ul {
     padding-left: 18px;
+}
+
+.tiptap-time {
+    position: absolute;
+    font-size: 13px;
+    top: 7.5%;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 2px;
+    width: fit-content;
+    opacity: 60%;
 }

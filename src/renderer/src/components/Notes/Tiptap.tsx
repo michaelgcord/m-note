@@ -88,9 +88,6 @@ const Tiptap = () : JSX.Element => {
             var sqlDate = date.toISOString();
             window.api.editNote(notesObj.note_id, sqlDate, html)
             notesObj.setHtml(html)
-			const time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
-			console.log(time)
-			notesObj.setDate(time)
         }
         editor.on('update', onUpdate)
 
@@ -107,7 +104,7 @@ const Tiptap = () : JSX.Element => {
     }, [])
 
     return (
-        <EditorContent spellCheck="false" className="tiptap-editor" editor={editor} />
+		<EditorContent spellCheck="false" className='tiptap-editor' editor={editor} />
     )
 }
 

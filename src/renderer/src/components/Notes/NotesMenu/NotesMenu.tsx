@@ -8,6 +8,7 @@ interface Notes {
     id: number
     html_content: string
     last_date_edited: string
+    date_created: string
 }
 
 const NotesMenu = () : JSX.Element => {
@@ -32,6 +33,7 @@ const NotesMenu = () : JSX.Element => {
                             id={item.id}
                             html_content={item.html_content}
                             last_date_edited={item.last_date_edited}
+                            date_created={item.date_created}
                         />
                     </div>
                 )

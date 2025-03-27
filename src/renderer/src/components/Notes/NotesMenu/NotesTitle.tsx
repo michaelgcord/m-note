@@ -4,6 +4,7 @@ interface Notes {
     id: number
     html_content: string
     last_date_edited: string
+    date_created: string
 }
 
 interface NotesTitleProps {

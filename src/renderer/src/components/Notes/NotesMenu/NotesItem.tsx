@@ -7,17 +7,18 @@ interface NotesItemProps {
     id: number
     html_content: string // prob need to change this to correct data
     last_date_edited: string
+    date_created: string
 }
 
-const NotesItem = ({id, html_content, last_date_edited} : NotesItemProps) : JSX.Element => {
+const NotesItem = ({id, html_content, last_date_edited, date_created} : NotesItemProps) : JSX.Element => {
     const notesObj = useNotesStore((state:any) => state.notesObj)
     const setNotesObj = useNotesStore((state:any) => state.setNotesObj)
     const globalEditor = useNotesStore((state:any) => state.globalEditor)
     const [html, setHtml] = useState<string>(html_content)
-    const [date, setDate] = useState<string>(last_date_edited)
     const [name, setName] = useState<string>('New Note')
     const [description, setDescription] = useState<string>('No Additional Text')
     const [firstRender, setFirstRender] = useState<boolean>(true)
+    const [time, setTime] = useState<string>("")
 
     const getNameAndDescription = (html: string) => {
         let text = convert(html, {
@@ -54,29 +55,42 @@ const NotesItem = ({id, html_content, last_date_edited} : NotesItemProps) : JSX.
     }
 
     const getDate = () => {
-        const currentDate = new Date().toLocaleDateString('en-US')
-        const lastDate = new Date(date).toLocaleDateString('en-US')
-
-        if (currentDate === lastDate) {
-            setDate(new Date(date).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }))
-        } else {
-            setDate(lastDate)
-        }
+        // can be reoptimized later by checking if minutes are the same
+        const currentDate = new Date().toLocaleString('en-US')
+        // Time will always be the current date
+        setTime(new Date().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }))
+        setNotesObj({...notesObj, dateEdited: currentDate})
     }
 
     // on note update
     useEffect(() => {
-        if (firstRender) {
-            getDate()
+        if (firstRender) { // skip get date on first render
             setFirstRender(false)
+            getNameAndDescription(html)
+            return
         }
         // We have to filter through html content to find the name and description
+        getDate()
         getNameAndDescription(html)
     }, [html])
 
+    // on first render initialize date for note
+    useEffect(() => {
+        const initializeDate = () => {
+            const currentDate = new Date().toLocaleDateString('en-US')
+            const lastDate = new Date(last_date_edited).toLocaleDateString('en-US')
+            if (currentDate === lastDate) {
+                setTime(new Date(last_date_edited).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }))
+            } else {
+                setTime(lastDate)
+            }
+        }
+        initializeDate()
+    }, [])
+
     // Set note id and render its content into editor
     const handleClick = () => {
-        setNotesObj({...notesObj, note_id: id, setHtml: setHtml, setDate: setDate})
+        setNotesObj({...notesObj, note_id: id, setHtml: setHtml, dateEdited: last_date_edited, dateCreated: date_created})
         globalEditor.commands.setContent(html)
 
         // Reset tiptap state to start a new fresh history
@@ -93,7 +107,7 @@ const NotesItem = ({id, html_content, last_date_edited} : NotesItemProps) : JSX.
     return (
         <div onClick={handleClick} className="notes-menu-item">
             <div className="note-name">{name}</div>
-            <div className="note-date">{date} <span className="note-description">{description}</span></div>
+            <div className="note-date">{time} <span className="note-description">{description}</span></div>
         </div>
     )
 }
