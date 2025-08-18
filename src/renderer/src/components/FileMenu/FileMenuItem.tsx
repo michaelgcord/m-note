@@ -24,10 +24,11 @@ interface FileMenuItemProps {
 
 const FileMenuItem = ({id, parent_id, setParentData, name, type, open, depth} : FileMenuItemProps) : JSX.Element => {
     const mouseObj = useFileMenuStore((state:any) => state.mouseObj)
+    const highlightObj = useFileMenuStore((state:any) => state.highlightObj)
     const [data, setData] = useState<Array<Folder>>([])
     const [showFolder, setShowFolder] = useState<number>(open)
     const [showRename, setShowRename] = useState<boolean>(false)
-    const padding = (depth * 20) + 'px'
+    const padding = (depth * 20)
     const inputPadding = (depth * 20) + 20 + 'px'
 
     // Fetch folders whose parent_id matches this folder's id
@@ -38,19 +39,28 @@ const FileMenuItem = ({id, parent_id, setParentData, name, type, open, depth} : 
     }, [])
 
     const updateFolders = () => {
+        // Get folder data of drag element
         const result = window.api.getSingleFolder(mouseObj.folder.id)
-        window.api.editFolder(id, result.name, result.open, result.id)
 
+        if (type === 'file') { // If mouseUp on a file, we add drag element to its parent folder and update
+            window.api.editFolder(parent_id, result.name, result.open, result.id)
+            setParentData(window.api.getFolders(parent_id))
+        }
+        if (type === 'folder') { // If mouseUp on a folder, we add drag element to current folder
+            window.api.editFolder(id, result.name, result.open, result.id)
+            setData(window.api.getFolders(id))
+        }
+
+        // Update drag element's prev parent folder to tell frontend its no longer there
         mouseObj.folder.setParentData(window.api.getFolders(mouseObj.folder.parent_id))
-        setData(window.api.getFolders(id))
     }
 
     const checkConstraints = () => {
         console.log('Checking constraints...')
-        if (type != 'folder') {
-            console.error("ERROR: Files cannot contain folders.")
-            return false
-        }
+        // if (type != 'folder') {
+        //     console.error("ERROR: Files cannot contain folders.")
+        //     return false
+        // }
         if (id === mouseObj.folder.id) {
             console.error("ERROR: Folders can't be nested into themselves.")
             return false
@@ -78,8 +88,9 @@ const FileMenuItem = ({id, parent_id, setParentData, name, type, open, depth} : 
         updateFolders()
     }
 
+    // need to also get list of child ids
     return (
-        <div className="file-menu-item">
+        <div className="file-menu-item" style={{backgroundColor: (highlightObj.hoverID === id && mouseObj.isDragging && highlightObj.show && mouseObj.folder.parent_id != id && mouseObj.folder.id != id) ? "#585858" : "transparent"}}>
             {showRename
                 ? <FileMenuRename id={id} name={name} type={type} parent_id={parent_id} setParentData={setParentData} setShowRename={setShowRename} padding={padding}/>      
                 : <div onMouseUp={handleMouseUp}>
@@ -97,8 +108,8 @@ const FileMenuItem = ({id, parent_id, setParentData, name, type, open, depth} : 
                 </div>
             }
             <div className="file-menu-folder">
-                <FileMenuInput id={id} padding={inputPadding} setData={setData}/>
-                <div className="file-menu-vertical-line" style={{marginLeft: padding}}/>
+                <FileMenuInput id={id} padding={inputPadding} setData={setData} depth={depth}/>
+                <div className="file-menu-vertical-line" style={{marginLeft: padding + 'px'}}/>
                 {(showFolder && type === 'folder') ? data.map((item) => {
                     return (
                         <div key={item.id}>

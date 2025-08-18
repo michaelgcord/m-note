@@ -17,7 +17,7 @@ interface FileMenuRenameProps {
     type: string
     setParentData: React.Dispatch<React.SetStateAction<Folder[]>>
     setShowRename: React.Dispatch<React.SetStateAction<boolean>>
-    padding: string
+    padding: number
 }
 
 const FileMenuRename = ({id, parent_id, name, type, setParentData, setShowRename, padding} : FileMenuRenameProps) => {
@@ -94,7 +94,7 @@ const FileMenuRename = ({id, parent_id, name, type, setParentData, setShowRename
 
 
     return (
-        <div className="file-menu-input-container" style={{paddingLeft: padding}}>
+        <div className="file-menu-input-container" style={{paddingLeft: padding + 'px'}}>
             {type === 'folder'
                 ? <img src={arrowRight} alt="" height={26}/>
                 : <div style={{height: '26px', width: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><img src={file} alt="file" height={16}/></div>

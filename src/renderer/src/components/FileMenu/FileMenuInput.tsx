@@ -15,15 +15,17 @@ interface FileMenuInputProps {
     id: number | null
     padding: string,
     setData: React.Dispatch<React.SetStateAction<Folder[]>>
+    depth: number
 }
 
-const FileMenuInput = ({id, padding, setData} : FileMenuInputProps) : JSX.Element => {
+const FileMenuInput = ({id, padding, setData, depth} : FileMenuInputProps) : JSX.Element => {
     const inputRef = useRef<any>(null)
     const [input, setInput] = useState<string>("")
     const [showError, setShowError] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string>("")
     const inputObj = useFileMenuStore((state:any) => state.inputObj)
     const setInputObj = useFileMenuStore((state:any) => state.setInputObj)
+    const maxDepth = 2
 
     // Focus into input only after the input-field is inserted into the DOM
     useEffect(() => {
@@ -60,7 +62,7 @@ const FileMenuInput = ({id, padding, setData} : FileMenuInputProps) : JSX.Elemen
 
     const addFolder = () => {
         let inputTrimmed = input.trim()
-
+        
         // if input is empty, unmount input
         if (inputTrimmed == '') {
             removeInput()
@@ -84,9 +86,23 @@ const FileMenuInput = ({id, padding, setData} : FileMenuInputProps) : JSX.Elemen
         removeInput()
     }
 
-    const handleBlur = () => {
-        addFolder()
-    }
+    // remove input when user clicks outside of input and add file / add folder buttons
+    useEffect(() => {
+        const handleClickOutside = (event:any) => {
+        if (inputRef.current 
+            && !inputRef.current.contains(event.target) 
+            && !inputObj.addFileRef.current.contains(event.target) 
+            && !inputObj.addFolderRef.current.contains(event.target)) 
+            {
+                addFolder()
+                console.log(inputObj)
+            }
+        }
+        document.addEventListener("click", handleClickOutside);
+        return () => {
+        document.removeEventListener("click", handleClickOutside);
+        };
+    }, [inputRef, inputObj]);
 
     const handleEnter = (e:any) => {
         if (e.key === 'Enter') {
@@ -99,7 +115,7 @@ const FileMenuInput = ({id, padding, setData} : FileMenuInputProps) : JSX.Elemen
 
     return (
         <>
-        {(inputObj.id === id && inputObj.show) ?
+        {(inputObj.id === id && inputObj.show && !(inputObj.type === 'folder' && depth >= maxDepth)) ?
             <div className="file-menu-input-container" style={{paddingLeft: padding}}>
                 {inputObj.type === 'folder'
                     ? <img src={arrowRight} alt="" height={26}/>
@@ -111,7 +127,6 @@ const FileMenuInput = ({id, padding, setData} : FileMenuInputProps) : JSX.Elemen
                     ref={inputRef} 
                     onChange={handleChange} 
                     onKeyDown={handleEnter} 
-                    onBlur={handleBlur} 
                     value={input} 
                     type="text" 
                     spellCheck="false"

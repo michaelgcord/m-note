@@ -24,10 +24,10 @@ const NotesTitle = ({name, file_id, setData} : NotesTitleProps) : JSX.Element =>
     }
 
     return (
-        <div className="notes-menu-title">
+        <div className="notes-menu-title drag">
             <div>{name}</div>
             <div style={{flexGrow: 1}}></div>
-            <img onClick={handleClick} src={noteAdd} alt="" height={16}/>
+            <img className="no-drag" onClick={handleClick} src={noteAdd} alt="" height={16}/>
         </div>
 
     )

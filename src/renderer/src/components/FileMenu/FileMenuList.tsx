@@ -13,7 +13,10 @@ interface Folder {
 
 const FileMenuList = (): JSX.Element => {
     const [data, setData] = useState<Array<Folder>>([])
+    const [isHovering, setIsHovering] = useState(false)
     const mouseObj = useFileMenuStore((state:any) => state.mouseObj)
+    const highlightObj = useFileMenuStore((state:any) => state.highlightObj)
+    const setHighlightObj = useFileMenuStore((state:any) => state.setHighlightObj)
 
     // Fetch folder data on first render
     useEffect(() => {
@@ -44,9 +47,22 @@ const FileMenuList = (): JSX.Element => {
         updateFolders()
     }
 
+    const handleMouseOver = () => {
+        setIsHovering(true)
+        if (highlightObj.hoverID < 0) { // show hover style when user drags mouse back into file menu
+            setHighlightObj({...highlightObj, show: true, hoverID: null})
+        }
+    }
+
+    const handleMouseLeave = () => {
+        // when user drags mouse outside of file menu, remove hover style
+        setIsHovering(false)
+        setHighlightObj({...highlightObj, hoverID: -1})
+    }
+
     return (
-        <div className="file-menu-list" onMouseUp={handleMouseUp}>
-            <FileMenuInput id={null} padding="0px" setData={setData}/>
+        <div className="file-menu-list" onMouseUp={handleMouseUp} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} style={{backgroundColor: (highlightObj.hoverID === null && mouseObj.isDragging && highlightObj.show && isHovering && mouseObj.folder.parent_id != null) ? "#585858" : "transparent"}}>
+            <FileMenuInput id={null} padding="0px" setData={setData} depth={0}/>
             {data.map((item) => {
                 return (
                     <div key={item.id}>

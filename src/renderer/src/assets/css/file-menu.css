@@ -1,10 +1,12 @@
 .file-menu-container {
     height: 100vh;
-    width: 200px;
+    width: 275px;
     padding: 4px;
-    background-color: #D9D9D9;
+    /* background-color: #D9D9D9; */
+    background-color: #252526;
     display: flex;
     flex-direction: column;
+    color: #ffffff;
     /* border: solid red 1px; */
 }
 
@@ -13,6 +15,7 @@
     height: 40px;
     display: flex;
     align-items: center;
+    padding: 0 16px;
     /* border: solid red 1px; */
 }
 
@@ -24,17 +27,34 @@
     flex-grow: 1;
     height: 1px;
     width: 100%;
+    padding: 0 16px;
+    /* background-clip: content-box; */
+    border-radius: 4px;
     /* border: solid red 1px; */
 }
 
 .file-menu-item {
     /* position: relative; */
+    cursor: pointer;
+    border-radius: 4px;
 }
 
-.file-menu-name {
+.file-menu-name-container {
     display: flex;
     align-items: center;
     position: relative;
+    height: 36px;
+    border-radius: 4px;
+}
+
+.file-menu-name {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.file-menu-dots {
+    margin-right: 10px;
 }
 
 .file-menu-folder {
@@ -57,6 +77,7 @@
     justify-content: center;
     width: 100%;
     position: relative;
+    cursor: text
 }
 
 .file-menu-error-container {
@@ -97,4 +118,16 @@
     border: solid black 1px;
     width: 200px;
     padding-left: 30px;
+}
+
+.file-menu-footer-container {
+    padding: 0 16px
+}
+
+.file-menu-footer-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding-bottom: 8px;
+    cursor: default;
 }

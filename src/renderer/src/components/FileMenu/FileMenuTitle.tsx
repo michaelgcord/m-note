@@ -11,11 +11,10 @@ const FileMenuTitle = (): JSX.Element => {
     }
 
     return (
-        <div className="file-menu-title unselectable">
+        <div className="file-menu-title unselectable drag">
             <div>M Note</div>
-            <div style={{flexGrow: 1}}></div>
-            <img onClick={() => setInputType('folder')} src={folderAdd} alt="fileAdd" style={{marginTop: '1px'}} className="file-menu-item-title"/>
-            <img onClick={() => setInputType('file')} src={fileAdd} alt="fileAdd" className="file-menu-item-title"/>
+            {/* <img onClick={() => setInputType('folder')} src={folderAdd} alt="fileAdd" style={{marginTop: '1px'}} className="file-menu-item-title"/>
+            <img onClick={() => setInputType('file')} src={fileAsdd} alt="fileAdd" className="file-menu-item-title"/> */}
         </div>
     )
 }

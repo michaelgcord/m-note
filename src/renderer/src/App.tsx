@@ -1,4 +1,4 @@
-import SideMenu from "./components/SideMenu"
+// import SideMenu from "./components/SideMenu"
 import FileMenu from "./components/FileMenu/FileMenu"
 import Calendar from "./components/Calendar/Calendar"
 import Notes from "./components/Notes/Notes"
@@ -22,7 +22,7 @@ const Content = (): JSX.Element => {
 const App = (): JSX.Element => {
   return (
     <div className="app-container">
-      <SideMenu />
+      {/* <SideMenu /> */}
       <FileMenu />
       <Content />
     </div>

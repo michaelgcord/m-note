@@ -2,18 +2,20 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { createTables } from '../database/DatabaseAPI'
-import icon from '../../resources/icon.png?asset'
+// import icon from '../../resources/icon.png?asset'
 
 createTables()
 
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 670,
+    width: 1270,
+    height: 740,
+    frame: false,
     show: false,
+    maximizable: false,
+    resizable: false,
     autoHideMenuBar: true,
-    ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
@@ -22,6 +24,14 @@ function createWindow(): void {
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
+  })
+
+  ipcMain.on('minimize', () => {
+    mainWindow.minimize()
+  })
+
+  ipcMain.on('close', () => {
+    mainWindow.close()
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {

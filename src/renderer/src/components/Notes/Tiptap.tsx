@@ -4,7 +4,7 @@ import Document from '@tiptap/extension-document'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
 import FileHandler from '@tiptap-pro/extension-file-handler'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useNotesStore } from '@renderer/stores/useNotesStore'
 
 const Tab = Extension.create({
