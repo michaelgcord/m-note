@@ -13,7 +13,6 @@ interface InputObj {
     show: boolean
     id: number
     type: string
-    buttonClicked: boolean
     addFileRef: Ref<any> 
     addFolderRef: Ref<any>
 }
@@ -40,16 +39,24 @@ interface MouseObj {
     y: number
 }
 
+interface ContextMenuObj {
+    id: number | null
+    parent_id: number | null
+    setParentData: React.Dispatch<React.SetStateAction<Folder[]>> | null
+    showContext: boolean | null
+    setShowRename: React.Dispatch<React.SetStateAction<boolean>>
+}
+
 export const useFileMenuStore = create((set) => ({
     // Global obj to control input events
-    inputObj: {show: false, id: null, type: 'folder', buttonClicked: true, addFileRef: null, addFolderRef: null},
+    inputObj: {show: false, id: null, type: 'folder', addFileRef: null, addFolderRef: null},
     setInputObj: (value : InputObj) => {set({ inputObj: value })},
 
     // Global obj to control highlight events
     highlightObj: {show: true, leftClickID: null, hoverID: null},
     setHighlightObj: (value : HighlightObj) => {set({ highlightObj: value })},
 
-    // Global Obj to control mouse events
+    // Global Obj to control mouse drag events
     mouseObj: {
         folder: {
             id: null, 
@@ -63,5 +70,15 @@ export const useFileMenuStore = create((set) => ({
         x: 0, 
         y: 0
     },
-    setMouseObj: (value : MouseObj) => {set({ mouseObj: value })}
+    setMouseObj: (value : MouseObj) => {set({ mouseObj: value })},
+
+    // Global Obj to control context menu events
+    contextMenuObj: {
+        id: null,
+        parent_id: null,
+        setParentData: null,
+        showContext: false,
+        showRename: false,
+    },
+    setContextMenuObj: (value: ContextMenuObj) => {set({ contextMenuObj: value })}
 }))

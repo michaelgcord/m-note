@@ -6,25 +6,10 @@ interface Position {
     y: 0
 }
 
-interface Folder {
-    id: number
-    parent_id: number | null
-    name: string
-    type: string
-    open: number
-}
-
-interface FileMenuContextMenuProps {
-    id: number
-    parent_id: number | null
-    setParentData: React.Dispatch<React.SetStateAction<Folder[]>>
-    showContext: boolean
-    setShowContext: React.Dispatch<React.SetStateAction<boolean>>
-    setShowRename: React.Dispatch<React.SetStateAction<boolean>>
-}
-
-const FileMenuContextMenu = ({showContext, setShowContext, id, parent_id, setParentData, setShowRename} : FileMenuContextMenuProps) => {
+const FileMenuContextMenu = () => {
     const contextMenuRef = useRef<any>(null)
+    const contextMenuObj = useFileMenuStore((state:any) => state.contextMenuObj)
+    const setContextMenuObj = useFileMenuStore((state:any) => state.setContextMenuObj)
     const mouseObj = useFileMenuStore((state:any) => state.mouseObj)
     const [position, setPosition] = useState<Position>({x: 0, y: 0})
     const [isReady, setIsReady] = useState<boolean>(false)
@@ -36,40 +21,48 @@ const FileMenuContextMenu = ({showContext, setShowContext, id, parent_id, setPar
     }, [contextMenuRef.current])
 
     useEffect(() => {
-        if (!showContext) return
+        if (!contextMenuObj.showContext) return
         setPosition({x: mouseObj.x, y: mouseObj.y})
         setIsReady(true)
-    }, [showContext])
+    }, [contextMenuObj.showContext])
 
     const handleBlur = () => {
-        setShowContext(false)
+        setContextMenuObj({...contextMenuObj, showContext: false})
         setIsReady(false)
     }
 
     const handleDelete = () => {
-        window.api.deleteNotes(id)
-        window.api.deleteFolder(id)
-        setParentData(window.api.getFolders(parent_id))
-        setShowContext(false)
+        window.api.deleteNotes(contextMenuObj.id)
+        window.api.deleteFolder(contextMenuObj.id)
+        contextMenuObj.setParentData(window.api.getFolders(contextMenuObj.parent_id))
+        setContextMenuObj({...contextMenuObj, showContext: false})
     }
 
     const handleRename = () => {
-        setShowRename(true)
-        setShowContext(false)
+        contextMenuObj.setShowRename(true)
+        setContextMenuObj({...contextMenuObj, showContext: false})
     }
 
     return (
         <>
-        {showContext && isReady ? 
+        {contextMenuObj.showContext && isReady ? 
             <div 
                 className="file-menu-context-menu" 
                 ref={contextMenuRef} 
                 tabIndex={0} 
                 onBlur={handleBlur}
-                style={{top: 0, left: position.x}}
+                style={{top: position.y, left: position.x}}
             >
-                <div onClick={handleDelete}>Delete</div>
-                <div onClick={handleRename}>Rename</div>
+                <div style={{display: 'flex'}}>
+                    <div onClick={handleRename}>Rename...</div>
+                    <div style={{flexGrow: 1}}></div>
+                    <div>F2</div>
+                </div>
+              <div style={{display: 'flex'}}>
+                    <div onClick={handleDelete}>Delete</div>
+                    <div style={{flexGrow: 1}}></div>
+                    <div>Delete</div>
+                </div>                
             </div>
         : <></>}
         </>

@@ -40,8 +40,9 @@ const FileMenuName = ({id, parent_id, setParentData, type, name, open, setOpen, 
     const setHighlightObj = useFileMenuStore((state:any) => state.setHighlightObj)
     const mouseObj = useFileMenuStore((state:any) => state.mouseObj)
     const setMouseObj = useFileMenuStore((state:any) => state.setMouseObj)
+    const contextMenuObj = useFileMenuStore((state:any) => state.contextMenuObj)
+    const setContextMenuObj = useFileMenuStore((state:any) => state.setContextMenuObj)
     const [checkMove, setCheckMove] = useState<Move>({x: 0, y: 0, isLeftMouseDown: false})
-    const [showContext, setShowContext] = useState<boolean>(false)
     const [wasDragging, setWasDragging] = useState<boolean>(false)
 
     const notesObj = useNotesStore((state:any) => state.notesObj)
@@ -93,7 +94,7 @@ const FileMenuName = ({id, parent_id, setParentData, type, name, open, setOpen, 
     }
 
     const handleClick = () => {
-        if (showContext) return // don't trigger when context menu is open
+        if (contextMenuObj.showContext) return // don't trigger when context menu is open
         toggleOpen()
         selectFolder()
 
@@ -153,7 +154,8 @@ const FileMenuName = ({id, parent_id, setParentData, type, name, open, setOpen, 
     }
 
     const handleContextMenu = () => {
-        setShowContext(true)
+        // set context menu object
+        setContextMenuObj({id: id, parent_id: parent_id, setParentData: setParentData, showContext: true, setShowRename: setShowRename})
     }
 
     return (
@@ -179,14 +181,14 @@ const FileMenuName = ({id, parent_id, setParentData, type, name, open, setOpen, 
                 ? <img className="file-menu-dots" src={dots} alt="" height={16} draggable="false"/>
                 : <></>
             }
-            <FileMenuContextMenu
+            {/* <FileMenuContextMenu
                 id={id}
                 parent_id={parent_id}
                 setParentData={setParentData} 
                 showContext={showContext} 
                 setShowContext={setShowContext}
                 setShowRename={setShowRename}
-            />
+            /> */}
         </div>
     )
 }

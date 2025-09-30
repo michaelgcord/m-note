@@ -1,7 +1,8 @@
 import FileMenuTitle from "./FileMenuTitle"
 import FileMenuList from "./FileMenuList"
-import FileMenuMouse from "./FileMenuMouse"
 import FileMenuFooter from "./FileMenuFooter"
+import FileMenuMouse from "./FileMenuMouse"
+import FileMenuContextMenu from "./FileMenuContextMenu"
 
 const FileMenu = () : JSX.Element => {
     return (
@@ -10,6 +11,7 @@ const FileMenu = () : JSX.Element => {
             <FileMenuList />
             <FileMenuFooter />
             <FileMenuMouse />
+            <FileMenuContextMenu />
         </div>
     )
 }
