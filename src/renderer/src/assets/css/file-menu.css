@@ -32,6 +32,7 @@
     /* background-clip: content-box; */
     border-radius: 4px;
     /* border: solid red 1px; */
+    /* overflow: scroll; */
 }
 
 .file-menu-item {
@@ -78,7 +79,9 @@
     justify-content: center;
     width: 100%;
     position: relative;
-    cursor: text
+    cursor: text;
+    height: 36px;
+    
 }
 
 .file-menu-error-container {
@@ -92,7 +95,7 @@
     box-sizing: border-box;
     background-color: rgba(158, 158, 158, 0.3);
     font-size: 14px;
-    padding-left: 3px;
+    /* padding-left: 3px; */
     width: 100%;
 }
 
