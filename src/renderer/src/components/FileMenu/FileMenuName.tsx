@@ -5,7 +5,6 @@ import dots from "../../assets/icons/more-fill.svg"
 import { useFileMenuStore } from "@renderer/stores/useFileMenuStore"
 import { useNotesStore } from "@renderer/stores/useNotesStore"
 import { useEffect, useState } from "react"
-import FileMenuContextMenu from "./FileMenuContextMenu"
 
 interface Folder {
     id: number
@@ -181,14 +180,6 @@ const FileMenuName = ({id, parent_id, setParentData, type, name, open, setOpen, 
                 ? <img className="file-menu-dots" src={dots} alt="" height={16} draggable="false"/>
                 : <></>
             }
-            {/* <FileMenuContextMenu
-                id={id}
-                parent_id={parent_id}
-                setParentData={setParentData} 
-                showContext={showContext} 
-                setShowContext={setShowContext}
-                setShowRename={setShowRename}
-            /> */}
         </div>
     )
 }

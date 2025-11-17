@@ -32,6 +32,7 @@ const FileMenuContextMenu = () => {
     }
 
     const handleDelete = () => {
+        setIsReady(false)
         window.api.deleteNotes(contextMenuObj.id)
         window.api.deleteFolder(contextMenuObj.id)
         contextMenuObj.setParentData(window.api.getFolders(contextMenuObj.parent_id))
@@ -39,6 +40,7 @@ const FileMenuContextMenu = () => {
     }
 
     const handleRename = () => {
+        setIsReady(false)
         contextMenuObj.setShowRename(true)
         setContextMenuObj({...contextMenuObj, showContext: false})
     }
