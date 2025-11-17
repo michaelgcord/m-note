@@ -16,6 +16,8 @@ const FileMenuList = (): JSX.Element => {
     const [data, setData] = useState<Array<Folder>>([])
     const [isHovering, setIsHovering] = useState(false)
     const mouseObj = useFileMenuStore((state:any) => state.mouseObj)
+    const inputObj = useFileMenuStore((state:any) => state.inputObj)
+    const setInputObj = useFileMenuStore((state:any) => state.setInputObj)
     const highlightObj = useFileMenuStore((state:any) => state.highlightObj)
     const setHighlightObj = useFileMenuStore((state:any) => state.setHighlightObj)
 
@@ -62,7 +64,9 @@ const FileMenuList = (): JSX.Element => {
     }
 
     /**
-     * Deselect file-menu-item highlight when only the file-menu-list container is clicked
+     * Deselect file-menu-item highlight when only the file-menu-list container is clicked 
+     * +
+     * Reset inputObj to top of file list
      * 
      * Since OverlayScrollbarsComponent mounts itself in front of file-menu-list, we need to query select
      * the div that OverlayScrollbars creates to infer where the user is clicking. Fortunately, the div has a 
@@ -74,6 +78,7 @@ const FileMenuList = (): JSX.Element => {
     const handleClick = (e:any) => {
         if (e.target === firstScrollbar) {
             setHighlightObj({...highlightObj, leftClickID: null})
+            setInputObj({...inputObj, id: null})
         }
     }
 

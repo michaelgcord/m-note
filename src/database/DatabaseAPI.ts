@@ -5,7 +5,7 @@ const createTables = () => {
         CREATE TABLE if NOT EXISTS folders (
             id INTEGER PRIMARY KEY,
             parent_id INTEGER,
-            name STRING NOT NULL COLLATE NOCASE,
+            name TEXT NOT NULL COLLATE NOCASE,
             type TEXT,
             open INTEGER,
             UNIQUE(type, name)

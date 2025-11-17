@@ -49,6 +49,8 @@ const FileMenuRename = ({id, parent_id, name, type, setParentData, setShowRename
     }
 
     const editFolder = () => {
+        console.log(input)
+        console.log(typeof(input))
         let inputTrimmed = input.trim()
 
         // unmount if name stays the same
