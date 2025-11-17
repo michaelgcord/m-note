@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import FileMenuItem from "./FileMenuItem"
 import FileMenuInput from "./FileMenuInput"
 import { useFileMenuStore } from "@renderer/stores/useFileMenuStore"
+import { OverlayScrollbarsComponent } from "overlayscrollbars-react"
 
 interface Folder {
     id: number
@@ -60,25 +61,43 @@ const FileMenuList = (): JSX.Element => {
         setHighlightObj({...highlightObj, hoverID: -1})
     }
 
+    /**
+     * Deselect file-menu-item highlight when only the file-menu-list container is clicked
+     * 
+     * Since OverlayScrollbarsComponent mounts itself in front of file-menu-list, we need to query select
+     * the div that OverlayScrollbars creates to infer where the user is clicking. Fortunately, the div has a 
+     * data attribute that we could use to identify it.
+     * 
+     */
+    const container = document.querySelectorAll('div[data-overlayscrollbars-contents]')
+    const firstScrollbar = container[0]
+    const handleClick = (e:any) => {
+        if (e.target === firstScrollbar) {
+            setHighlightObj({...highlightObj, leftClickID: null})
+        }
+    }
+
     return (
-        <div className="file-menu-list" onMouseUp={handleMouseUp} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} style={{backgroundColor: (highlightObj.hoverID === null && mouseObj.isDragging && highlightObj.show && isHovering && mouseObj.folder.parent_id != null) ? "#585858" : "transparent"}}>
-            <FileMenuInput id={null} padding="0px" setData={setData} depth={0}/>
-            {data.map((item) => {
-                return (
-                    <div key={item.id}>
-                    <FileMenuItem
-                        id={item.id}
-                        parent_id={item.parent_id}
-                        setParentData={setData}
-                        name={item.name}
-                        type={item.type}
-                        open={item.open}
-                        depth={0}
-                    />
-                    </div>
-                )
-            })}
-        </div>
+        <OverlayScrollbarsComponent onClick={handleClick} options={{ scrollbars: {theme: 'os-theme-light', autoHide: 'leave'} }} className="file-menu-list">
+            <div onMouseUp={handleMouseUp} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} style={{backgroundColor: (highlightObj.hoverID === null && mouseObj.isDragging && highlightObj.show && isHovering && mouseObj.folder.parent_id != null) ? "#585858" : "transparent"}}>
+                <FileMenuInput id={null} padding="0px" setData={setData} depth={0}/>
+                {data.map((item) => {
+                    return (
+                        <div key={item.id}>
+                        <FileMenuItem
+                            id={item.id}
+                            parent_id={item.parent_id}
+                            setParentData={setData}
+                            name={item.name}
+                            type={item.type}
+                            open={item.open}
+                            depth={0}
+                        />
+                        </div>
+                    )
+                })}
+            </div>
+        </OverlayScrollbarsComponent>
     )
 }
 

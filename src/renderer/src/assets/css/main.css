@@ -2,6 +2,7 @@
 @import './side-menu.css';
 @import './file-menu.css';
 @import './notes.css';
+@import 'overlayscrollbars/overlayscrollbars.css';
 
 .app-container {
   height: 100vh;

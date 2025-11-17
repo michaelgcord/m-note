@@ -118,7 +118,7 @@ const FileMenuInput = ({id, padding, setData, depth} : FileMenuInputProps) : JSX
         {(inputObj.id === id && inputObj.show && !(inputObj.type === 'folder' && depth >= maxDepth)) ?
             <div className="file-menu-input-container" style={{paddingLeft: padding}}>
                 {inputObj.type === 'folder'
-                    ? <img src={arrowRight} alt="" height={26}/>
+                    ? <img src={arrowRight} alt="right-arrow" height={26} width={30}/>
                     : <div style={{height: '26px', width: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><img src={file} alt="file" height={16}/></div>
                 }
                 <div className="file-menu-error-container">
