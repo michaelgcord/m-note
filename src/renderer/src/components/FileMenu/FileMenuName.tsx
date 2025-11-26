@@ -21,9 +21,10 @@ interface FileMenuNameProps {
     type: string
     name: string
     open: number
-    setOpen: React.Dispatch<React.SetStateAction<number>>,
+    setOpen: React.Dispatch<React.SetStateAction<number>>
     padding: number
     setShowRename: React.Dispatch<React.SetStateAction<boolean>>
+    depth: number
 }
 
 interface Move {
@@ -32,7 +33,7 @@ interface Move {
     isLeftMouseDown: boolean
 }
 
-const FileMenuName = ({id, parent_id, setParentData, type, name, open, setOpen, padding, setShowRename} : FileMenuNameProps) : JSX.Element => {
+const FileMenuName = ({id, parent_id, setParentData, type, name, open, setOpen, padding, setShowRename, depth} : FileMenuNameProps) : JSX.Element => {
     const inputObj = useFileMenuStore((state:any) => state.inputObj)
     const setInputObj = useFileMenuStore((state:any) => state.setInputObj)
     const highlightObj = useFileMenuStore((state:any) => state.highlightObj)
@@ -154,7 +155,18 @@ const FileMenuName = ({id, parent_id, setParentData, type, name, open, setOpen, 
 
     const handleContextMenu = () => {
         // set context menu object
-        setContextMenuObj({id: id, parent_id: parent_id, setParentData: setParentData, showContext: true, setShowRename: setShowRename})
+        setHighlightObj({...highlightObj, rightClickID: id})
+        // setContextMenuObj({id: id, parent_id: parent_id, setParentData: setParentData, showContext: true, setShowRename: setShowRename})
+        if (type === 'file') {
+            setContextMenuObj({id: id, parent_id: parent_id, setParentData: setParentData, showContext: true, setShowRename: setShowRename, showFileOption: false, showFolderOption: false, setInput: true})
+        }
+        if (type === 'folder') {
+            if (depth >= 2) {
+                setContextMenuObj({id: id, parent_id: parent_id, setParentData: setParentData, showContext: true, setShowRename: setShowRename, showFileOption: true, showFolderOption: false, setInput: true})
+            } else {
+                setContextMenuObj({id: id, parent_id: parent_id, setParentData: setParentData, showContext: true, setShowRename: setShowRename, showFileOption: true, showFolderOption: true, setInput: true})
+            }
+        }
     }
 
     return (
@@ -166,7 +178,12 @@ const FileMenuName = ({id, parent_id, setParentData, type, name, open, setOpen, 
             onMouseLeave={handleMouseLeave}
             onContextMenu={handleContextMenu}
             className="file-menu-name-container unselectable" 
-            style={{paddingLeft: padding + 'px', backgroundColor: highlightObj.leftClickID === id ? "#585858" : ""}}
+            style={{
+                paddingLeft: padding + 'px', 
+                backgroundColor: highlightObj.leftClickID === id ? "#585858" : "",
+                width: 'calc(100% + 40px)',
+                marginLeft: '-20px'
+            }}
         >
             {type === 'file'
                 ? <div style={{height: '26px', width: '26px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><img src={file} alt="file" height={16} draggable="false"/></div>
@@ -176,10 +193,8 @@ const FileMenuName = ({id, parent_id, setParentData, type, name, open, setOpen, 
             }
             <div className="file-menu-name" style={{width: nameWidth}}>{name}</div>
             <div style={{flexGrow: 1}}></div>
-            {showDots
-                ? <img className="file-menu-dots" src={dots} alt="" height={16} draggable="false"/>
-                : <></>
-            }
+            {showDots && <img className="file-menu-dots" src={dots} alt="" height={16} draggable="false"/>}
+            <div className="file-menu-border-container" style={{border: highlightObj.rightClickID === id ? "solid 1px #749aed" : ""}}></div>
         </div>
     )
 }

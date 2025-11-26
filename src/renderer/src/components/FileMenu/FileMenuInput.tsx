@@ -25,6 +25,8 @@ const FileMenuInput = ({id, padding, setData, depth} : FileMenuInputProps) : JSX
     const [errorMessage, setErrorMessage] = useState<string>("")
     const inputObj = useFileMenuStore((state:any) => state.inputObj)
     const setInputObj = useFileMenuStore((state:any) => state.setInputObj)
+    const contextMenuObj = useFileMenuStore((state:any) => state.contextMenuObj)
+    const setContextMenuObj = useFileMenuStore((state:any) => state.setContextMenuObj)    
     const maxDepth = 2
 
     // Focus into input only after the input-field is inserted into the DOM
@@ -89,20 +91,37 @@ const FileMenuInput = ({id, padding, setData, depth} : FileMenuInputProps) : JSX
     // remove input when user clicks outside of input and add file / add folder buttons
     useEffect(() => {
         const handleClickOutside = (event:any) => {
-        if (inputRef.current 
-            && !inputRef.current.contains(event.target) 
-            && !inputObj.addFileRef.current.contains(event.target) 
-            && !inputObj.addFolderRef.current.contains(event.target)) 
-            {
-                addFolder()
-                console.log(inputObj)
-            }
+            if (inputRef.current 
+                && !inputRef.current.contains(event.target) 
+                && !inputObj.addFileRef.current.contains(event.target) 
+                && !inputObj.addFolderRef.current.contains(event.target)) 
+                {
+                    if (contextMenuObj.setInput) {
+                        setContextMenuObj({...contextMenuObj, showContext: false, setInput: false})
+                        return
+                    }
+                    addFolder()
+                }
         }
+
         document.addEventListener("click", handleClickOutside);
         return () => {
         document.removeEventListener("click", handleClickOutside);
         };
-    }, [inputRef, inputObj]);
+    }, [inputRef, inputObj, contextMenuObj.setInput]);
+
+    // remove input when user right clicks
+    useEffect(() => {
+        const handleRightClick = (e:any) => {
+            if (e.button === 2) {
+                addFolder()
+            }
+        }
+        document.addEventListener("mousedown", handleRightClick)
+        return () => {
+        document.removeEventListener("mousedown", handleRightClick);
+        };        
+    }, [inputObj])
 
     const handleEnter = (e:any) => {
         if (e.key === 'Enter') {

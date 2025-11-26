@@ -20,6 +20,8 @@ const FileMenuList = (): JSX.Element => {
     const setInputObj = useFileMenuStore((state:any) => state.setInputObj)
     const highlightObj = useFileMenuStore((state:any) => state.highlightObj)
     const setHighlightObj = useFileMenuStore((state:any) => state.setHighlightObj)
+    const container = document.querySelectorAll('div[data-overlayscrollbars-contents]')
+    const firstScrollbar = container[0] // scrollbar overlays on top of file-menu-list div
 
     // Fetch folder data on first render
     useEffect(() => {
@@ -50,9 +52,9 @@ const FileMenuList = (): JSX.Element => {
         updateFolders()
     }
 
-    const handleMouseOver = () => {
+    const handleMouseOver = (e:any) => {
         setIsHovering(true)
-        if (highlightObj.hoverID < 0) { // show hover style when user drags mouse back into file menu
+        if (highlightObj.hoverID < 0 || e.target === firstScrollbar) { // show hover style when user drags mouse back into file menu
             setHighlightObj({...highlightObj, show: true, hoverID: null})
         }
     }
@@ -63,18 +65,7 @@ const FileMenuList = (): JSX.Element => {
         setHighlightObj({...highlightObj, hoverID: -1})
     }
 
-    /**
-     * Deselect file-menu-item highlight when only the file-menu-list container is clicked 
-     * +
-     * Reset inputObj to top of file list
-     * 
-     * Since OverlayScrollbarsComponent mounts itself in front of file-menu-list, we need to query select
-     * the div that OverlayScrollbars creates to infer where the user is clicking. Fortunately, the div has a 
-     * data attribute that we could use to identify it.
-     * 
-     */
-    const container = document.querySelectorAll('div[data-overlayscrollbars-contents]')
-    const firstScrollbar = container[0]
+    // Deselect file-menu-item highlight when only the file-menu-list container is clicked 
     const handleClick = (e:any) => {
         if (e.target === firstScrollbar) {
             setHighlightObj({...highlightObj, leftClickID: null})
@@ -83,25 +74,23 @@ const FileMenuList = (): JSX.Element => {
     }
 
     return (
-        <OverlayScrollbarsComponent onClick={handleClick} options={{ scrollbars: {theme: 'os-theme-light', autoHide: 'leave'} }} className="file-menu-list">
-            <div onMouseUp={handleMouseUp} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} style={{backgroundColor: (highlightObj.hoverID === null && mouseObj.isDragging && highlightObj.show && isHovering && mouseObj.folder.parent_id != null) ? "#585858" : "transparent"}}>
-                <FileMenuInput id={null} padding="0px" setData={setData} depth={0}/>
-                {data.map((item) => {
-                    return (
-                        <div key={item.id}>
-                        <FileMenuItem
-                            id={item.id}
-                            parent_id={item.parent_id}
-                            setParentData={setData}
-                            name={item.name}
-                            type={item.type}
-                            open={item.open}
-                            depth={0}
-                        />
-                        </div>
-                    )
-                })}
-            </div>
+        <OverlayScrollbarsComponent onMouseUp={handleMouseUp} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} onClick={handleClick} options={{ scrollbars: {theme: 'os-theme-light', autoHide: 'leave'} }} className="file-menu-list" style={{backgroundColor: (highlightObj.hoverID === null && mouseObj.isDragging && highlightObj.show && isHovering && mouseObj.folder.parent_id != null) ? "#585858" : "transparent"}}>
+            <FileMenuInput id={null} padding="0px" setData={setData} depth={0}/>
+            {data.map((item) => {
+                return (
+                    <div key={item.id}>
+                    <FileMenuItem
+                        id={item.id}
+                        parent_id={item.parent_id}
+                        setParentData={setData}
+                        name={item.name}
+                        type={item.type}
+                        open={item.open}
+                        depth={0}
+                    />
+                    </div>
+                )
+            })}
         </OverlayScrollbarsComponent>
     )
 }

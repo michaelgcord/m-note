@@ -20,6 +20,7 @@ interface InputObj {
 interface HighlightObj {
     show: boolean
     leftClickID: number | null
+    rightClickID: number | null
     highlightID: number | null
 }
 
@@ -45,6 +46,9 @@ interface ContextMenuObj {
     setParentData: React.Dispatch<React.SetStateAction<Folder[]>> | null
     showContext: boolean | null
     setShowRename: React.Dispatch<React.SetStateAction<boolean>>
+    showFileOption: boolean
+    showFolderOption: boolean
+    setInput: boolean
 }
 
 export const useFileMenuStore = create((set) => ({
@@ -53,7 +57,7 @@ export const useFileMenuStore = create((set) => ({
     setInputObj: (value : InputObj) => {set({ inputObj: value })},
 
     // Global obj to control highlight events
-    highlightObj: {show: true, leftClickID: null, hoverID: null},
+    highlightObj: {show: true, leftClickID: null, rightClickID: null, hoverID: null},
     setHighlightObj: (value : HighlightObj) => {set({ highlightObj: value })},
 
     // Global Obj to control mouse drag events
@@ -79,6 +83,9 @@ export const useFileMenuStore = create((set) => ({
         setParentData: null,
         showContext: false,
         showRename: false,
+        showFileOption: false,
+        showFolderOption: false,
+        setInput: false,
     },
     setContextMenuObj: (value: ContextMenuObj) => {set({ contextMenuObj: value })}
 }))

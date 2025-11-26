@@ -28,7 +28,7 @@ const FileMenuItem = ({id, parent_id, setParentData, name, type, open, depth} : 
     const [data, setData] = useState<Array<Folder>>([])
     const [showFolder, setShowFolder] = useState<number>(open)
     const [showRename, setShowRename] = useState<boolean>(false)
-    const padding = (depth * 20)
+    const padding = (depth * 20) + 20
     const inputPadding = (depth * 20) + 20 + 'px'
 
     // Fetch folders whose parent_id matches this folder's id
@@ -90,9 +90,10 @@ const FileMenuItem = ({id, parent_id, setParentData, name, type, open, depth} : 
 
     // need to also get list of child ids
     return (
-        <div className="file-menu-item" style={{backgroundColor: (highlightObj.hoverID === id && mouseObj.isDragging && highlightObj.show && mouseObj.folder.parent_id != id && mouseObj.folder.id != id) ? "#585858" : "transparent"}}>
+        <div className="file-menu-item">
+            <div className="file-menu-item-background" style={{backgroundColor: (highlightObj.hoverID === id && mouseObj.isDragging && highlightObj.show && mouseObj.folder.parent_id != id && mouseObj.folder.id != id) ? "#585858" : "transparent"}}/>
             {showRename
-                ? <FileMenuRename id={id} name={name} type={type} parent_id={parent_id} setParentData={setParentData} setShowRename={setShowRename} padding={padding}/>      
+                ? <FileMenuRename id={id} name={name} type={type} parent_id={parent_id} setParentData={setParentData} setShowRename={setShowRename} padding={padding-20}/>      
                 : <div onMouseUp={handleMouseUp}>
                     <FileMenuName 
                         id={id} 
@@ -104,12 +105,13 @@ const FileMenuItem = ({id, parent_id, setParentData, name, type, open, depth} : 
                         setOpen={setShowFolder} 
                         padding={padding}
                         setShowRename={setShowRename}
+                        depth={depth}
                     />
                 </div>
             }
             <div className="file-menu-folder">
                 <FileMenuInput id={id} padding={inputPadding} setData={setData} depth={depth}/>
-                <div className="file-menu-vertical-line" style={{marginLeft: padding + 'px'}}/>
+                <div className="file-menu-vertical-line" style={{marginLeft: padding - 20 + 'px'}}/>
                 {(showFolder && type === 'folder') ? data.map((item) => {
                     return (
                         <div key={item.id}>
