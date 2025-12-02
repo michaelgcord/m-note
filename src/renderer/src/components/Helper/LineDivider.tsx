@@ -1,14 +1,16 @@
 interface LineDividerProps {
     mode: string
+    length?: string
 }
 
-const LineDivider = ({mode="horizontal"} : LineDividerProps): JSX.Element => {
+const LineDivider = ({mode="horizontal", length='100%'} : LineDividerProps): JSX.Element => {
     return (
         <div style={{
-            height: (mode === 'horizontal') ? '1px' : '100%',
-            width: (mode === 'horizontal') ? '100%' : '1px',
+            height: (mode === 'horizontal') ? '1px' : length,
+            width: (mode === 'horizontal') ? length : '1px',
             backgroundColor: 'black',
-            opacity: '25%'
+            opacity: '25%',
+            margin: '0 auto'
         }}>
         </div>
     )

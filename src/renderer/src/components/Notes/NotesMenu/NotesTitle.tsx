@@ -1,33 +1,11 @@
-import noteAdd from "../../../assets/icons/note-add.svg"
+import { useNotesStore } from "@renderer/stores/useNotesStore"
 
-interface Notes {
-    id: number
-    html_content: string
-    last_date_edited: string
-    date_created: string
-}
-
-interface NotesTitleProps {
-    name: string
-    file_id: number
-    setData: React.Dispatch<React.SetStateAction<Notes[]>>
-}
-
-const NotesTitle = ({name, file_id, setData} : NotesTitleProps) : JSX.Element => {
-    const handleClick = () => {
-        if (file_id) {
-            window.api.addNote(file_id)
-            setData(window.api.getNotes(file_id))
-        } else {
-            console.log("no file selected")
-        }
-    }
+const NotesTitle = () : JSX.Element => {
+    const notesObj = useNotesStore((state:any) => state.notesObj)
 
     return (
         <div className="notes-menu-title drag">
-            <div>{name}</div>
-            <div style={{flexGrow: 1}}></div>
-            <img className="no-drag" onClick={handleClick} src={noteAdd} alt="" height={16}/>
+            <div className="notes-title-name">{notesObj.name}</div>
         </div>
 
     )

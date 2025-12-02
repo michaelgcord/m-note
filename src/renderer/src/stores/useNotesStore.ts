@@ -8,10 +8,11 @@ interface NotesObj {
     setHtml: React.Dispatch<React.SetStateAction<string>> | null
     dateEdited: string | null
     dateCreated: string | null
+    isFocused: boolean
 }
 
 export const useNotesStore = create((set) => ({
-    notesObj: {name: 'M Note', file_id: null, note_id: null, setHtml: null, dateEdited: null, dateCreated: null},
+    notesObj: {name: 'M Note', file_id: null, note_id: null, setHtml: null, dateEdited: null, dateCreated: null, isFocused: false},
     setNotesObj: (value : NotesObj) => {set({notesObj: value})},
 
     globalEditor: null,

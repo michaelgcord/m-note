@@ -1,5 +1,6 @@
 import arrowRight from "../../assets/icons/arrow-right.svg"
 import file from "../../assets/icons/file.svg"
+import { useNotesStore } from "@renderer/stores/useNotesStore"
 import { useRef, useEffect, useState } from "react"
 
 interface Folder {
@@ -26,6 +27,9 @@ const FileMenuRename = ({id, parent_id, name, type, setParentData, setShowRename
     const [showError, setShowError] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string>("")
     const nameStart = name
+
+    const notesObj = useNotesStore((state:any) => state.notesObj)
+    const setNotesObj = useNotesStore((state:any) => state.setNotesObj)
 
     useEffect(() => {
         if (renameRef.current) {
@@ -77,6 +81,11 @@ const FileMenuRename = ({id, parent_id, name, type, setParentData, setShowRename
         const result = window.api.getSingleFolder(id)
         window.api.editFolder(result.parent_id, inputTrimmed, result.open, id)
         setParentData(window.api.getFolders(parent_id))
+
+        //reflect name change in notes menu if its file is currently selected
+        if (notesObj.file_id === id) {
+            setNotesObj({...notesObj, name: inputTrimmed})
+        }
 
         removeInput()
     }

@@ -90,7 +90,7 @@ const NotesItem = ({id, html_content, last_date_edited, date_created} : NotesIte
 
     // Set note id and render its content into editor
     const handleClick = () => {
-        setNotesObj({...notesObj, note_id: id, setHtml: setHtml, dateEdited: last_date_edited, dateCreated: date_created})
+        setNotesObj({...notesObj, note_id: id, setHtml: setHtml, dateEdited: last_date_edited, dateCreated: date_created, isFocused: true})
         globalEditor.commands.setContent(html)
 
         // Reset tiptap state to start a new fresh history
@@ -105,9 +105,12 @@ const NotesItem = ({id, html_content, last_date_edited, date_created} : NotesIte
     }
 
     return (
-        <div onClick={handleClick} className="notes-menu-item">
+        <div className="notes-menu-item unselectable" onClick={handleClick}>
             <div className="note-name">{name}</div>
             <div className="note-date">{time} <span className="note-description">{description}</span></div>
+            <div className="notes-menu-item-background"
+                style={{backgroundColor: (notesObj.note_id === id && notesObj.isFocused) ? "#749aed" : notesObj.note_id === id ? "#c3c3c3" : ""}}
+            />
         </div>
     )
 }

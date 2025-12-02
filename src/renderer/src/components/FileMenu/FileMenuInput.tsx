@@ -106,8 +106,8 @@ const FileMenuInput = ({id, padding, setData, depth} : FileMenuInputProps) : JSX
 
         document.addEventListener("click", handleClickOutside);
         return () => {
-        document.removeEventListener("click", handleClickOutside);
-        };
+            document.removeEventListener("click", handleClickOutside);
+        }
     }, [inputRef, inputObj, contextMenuObj.setInput]);
 
     // remove input when user right clicks
