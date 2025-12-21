@@ -155,6 +155,7 @@ const getNotes = (folder_id: number) => {
         const query = `
             SELECT * FROM notes
             WHERE folder_id is ?
+            ORDER BY last_date_edited DESC
         `
         const preparedQuery = db.prepare(query)
         const rowList = preparedQuery.all(folder_id)

@@ -4,6 +4,7 @@ import NotesItem from "./NotesItem"
 import NotesTitle from "./NotesTitle"
 import LineDivider from "@renderer/components/Helper/LineDivider"
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react"
+import { motion } from "motion/react"
 
 interface Notes {
     id: number
@@ -42,7 +43,7 @@ const NotesMenu = ({data} : NotesMenuProps) : JSX.Element => {
                 <div ref={notesMenuListRef}>
                     {data.map((item, index) => {
                         return (
-                            <div key={item.id}>
+                            <motion.div layout key={item.id}>
                                 <NotesItem 
                                     id={item.id}
                                     html_content={item.html_content}
@@ -53,7 +54,7 @@ const NotesMenu = ({data} : NotesMenuProps) : JSX.Element => {
                                     ? <></>
                                     : <hr className="notes-divider"/>
                                 }
-                            </div>
+                            </motion.div>
                         )
                     })}
                 </div>

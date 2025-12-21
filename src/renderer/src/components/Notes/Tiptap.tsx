@@ -4,7 +4,7 @@ import Document from '@tiptap/extension-document'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
 import FileHandler from '@tiptap-pro/extension-file-handler'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNotesStore } from '@renderer/stores/useNotesStore'
 
 const Tab = Extension.create({
@@ -22,9 +22,21 @@ const CustomDocument = Document.extend({
 	content: 'heading block*',
   })
 
-const Tiptap = () : JSX.Element => {
+interface Notes {
+    id: number
+    html_content: string
+    last_date_edited: string
+    date_created: string
+}
+
+interface TiptapProps {
+	setData: React.Dispatch<React.SetStateAction<Notes[]>>
+}
+
+const Tiptap = ({setData} : TiptapProps) : JSX.Element => {
     const notesObj = useNotesStore((state:any) => state.notesObj)
     const setGlobalEditor = useNotesStore((state:any) => state.setGlobalEditor)
+	const [currentNoteId, setCurrentNoteId] = useState<number | null>(null)
 
 	const editor = useEditor({
 		extensions: [
@@ -83,11 +95,18 @@ const Tiptap = () : JSX.Element => {
         if (!editor) return
         const onUpdate = () => {
             if (!notesObj.note_id) return
-            const html = editor.getHTML()
-            const date = new Date()
-            var sqlDate = date.toISOString();
-            window.api.editNote(notesObj.note_id, sqlDate, html)
-            notesObj.setHtml(html)
+			const html = editor.getHTML()
+			const date = new Date()
+			var sqlDate = date.toISOString();
+			window.api.editNote(notesObj.note_id, sqlDate, html)
+			notesObj.setHtml(html)
+
+			if (notesObj.note_id != currentNoteId) {
+				// Move this note to the front of the notes list
+				setCurrentNoteId(notesObj.note_id)
+				setData(window.api.getNotes(notesObj.file_id))
+			}
+
         }
         editor.on('update', onUpdate)
 

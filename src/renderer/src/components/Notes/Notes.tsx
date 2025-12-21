@@ -33,7 +33,7 @@ const Notes = (): JSX.Element => {
                 <NotesBar file_id={notesObj.file_id} setData={setData}/>
                 <LineDivider mode="horizontal"/>
                 <TimeCreated />
-                <Tiptap />
+                <Tiptap setData={setData}/>
             </div>
         </div>
     )
