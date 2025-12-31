@@ -118,18 +118,34 @@
     justify-content: center;
 }
 
-.notes-bar-icon-animation {
+.notes-bar-icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 4px;
+    margin-right: 10px;
     transition: .1s ease;
 }
 
-.notes-bar-icon {
-    margin-right: 12px;
-    transition: .3s ease;
+.notes-bar-icon-container:hover {
+    background-color: #eeeeee
 }
 
-.notes-bar-icon:hover {
-    background-color: #eeeeee;
+.notes-bar-add-container, .notes-bar-delete-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
     border-radius: 4px;
+    margin-right: 8px;
+    transition: .1s ease;
+}
+
+.notes-bar-add-container:hover, .notes-bar-delete-container:hover{
+    background-color: #eeeeee
 }
 
 .search-container {

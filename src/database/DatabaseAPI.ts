@@ -84,7 +84,7 @@ const editFolder = (parent_id: number, name: string, open: number, id: number) =
 // Delete folder and all its subfolders
 const deleteFolder = (id: number) => {
     try {
-        deleteNotes(id)
+        deleteFolderNotes(id)
         const folders = getFolders(id)
         for (let i = 0; i < folders.length; i++) {
             deleteFolder(folders[i].id)
@@ -188,7 +188,17 @@ const editNote = (note_id: number, last_date_edited: string, html_content: strin
     }
 }
 
-const deleteNotes = (folder_id: number) => {
+const deleteNote = (note_id: number) => {
+    try {
+        const query = db.prepare("DELETE FROM notes WHERE id = ?")
+        query.run(note_id)
+    } catch (err) {
+        console.error(err)
+        throw err
+    }
+}
+
+const deleteFolderNotes = (folder_id: number) => {
     try {
         const query = db.prepare("DELETE FROM notes WHERE folder_id = ?")
         query.run(folder_id)
@@ -212,5 +222,6 @@ export {
     getNotes,
     addNote,
     editNote,
-    deleteNotes,
+    deleteNote,
+    deleteFolderNotes,
 }

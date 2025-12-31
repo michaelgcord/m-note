@@ -12,7 +12,8 @@ import {
   getNotes,
   addNote,
   editNote,
-  deleteNotes,
+  deleteNote,
+  deleteFolderNotes,
 } from '../database/DatabaseAPI'
 
 // Custom APIs for renderer
@@ -28,7 +29,8 @@ const api = {
   getNotes: getNotes,
   addNote: addNote,
   editNote: editNote,
-  deleteNotes: deleteNotes,
+  deleteNote: deleteNote,
+  deleteFolderNotes: deleteFolderNotes,
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to
