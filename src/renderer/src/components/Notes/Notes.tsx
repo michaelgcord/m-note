@@ -5,6 +5,7 @@ import LineDivider from "../Helper/LineDivider"
 import NotesBar from "./NotesBar"
 import Tiptap from "./Tiptap"
 import TimeCreated from "./TimeCreated"
+import { OverlayScrollbarsComponent } from "overlayscrollbars-react"
 
 interface Notes {
     id: number
@@ -15,12 +16,21 @@ interface Notes {
 
 const Notes = (): JSX.Element => {
     const notesObj = useNotesStore((state:any) => state.notesObj)
-    const [data, setData] = useState<Array<Notes>>([]) 
+    const setNotesObj = useNotesStore((state:any) => state.setNotesObj)
+    const globalEditor = useNotesStore((state:any) => state.globalEditor)
+    const [data, setData] = useState<Array<Notes>>([])
 
     // fetch the list of notes associated with file id
     useEffect(() => {
         if (notesObj.file_id) {
-            setData(window.api.getNotes(notesObj.file_id))
+            const result = window.api.getNotes(notesObj.file_id)
+            setData(result)
+
+            // reset tiptap editor if data is empty
+            if (result.length === 0) {
+                setNotesObj({...notesObj, note_id: null, setHtml: null, dateEdited: null, dateCreated: null})
+                globalEditor.commands.setContent("")
+            }
         }
     }, [notesObj.file_id])
 
@@ -32,8 +42,10 @@ const Notes = (): JSX.Element => {
             <div className="notes-right">
                 <NotesBar file_id={notesObj.file_id} setData={setData}/>
                 <LineDivider mode="horizontal"/>
-                <TimeCreated />
-                <Tiptap setData={setData}/>
+                <OverlayScrollbarsComponent className="tiptap-container" options={{ scrollbars: {autoHide: 'scroll'} }}>
+                    <TimeCreated />
+                    <Tiptap setData={setData}/>
+                </OverlayScrollbarsComponent>
             </div>
         </div>
     )

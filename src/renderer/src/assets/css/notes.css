@@ -28,6 +28,16 @@
     overflow: hidden;
 }
 
+.notes-menu-no-notes {
+    height: 1px;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: #b6b6b6;
+}
+
 .notes-menu-list {
     height: 1px;
     flex-grow: 1;
@@ -150,35 +160,47 @@
 
 .search-container {
     position: relative;
+    width: 100%;
 }
 
 .search-icon {
     position: absolute;
-    left: 10%;
+    left: 3%;
     top: 10%;
 }
 
 .search {
     outline: none;
-    margin-left: 12px;
     height: 26px;
     padding-left: 30px;
-    width: 177px;
+    width: 100%;
+    border-radius: 4px;
+}
+
+.tiptap-container {
+    height: 1px;
+    flex-grow: 1;
+    margin-right: 1px;
 }
 
 .tiptap {
     height: 100%;
     width: 100%;
     outline: unset;
+    line-height: 1.5;
+}
+
+.tiptap-editor-container {
+    height: 95%;
 }
 
 .tiptap-editor {
-    all: unset;
-    height: 100px;
-    flex-grow: 1;
-    /* border: solid red 1px; */
-    overflow-y: auto;
-    padding: 24px 8px 8px 8px;
+    padding: 0 16px 160px;
+    caret-color: #749aed;
+}
+
+.tiptap p {
+    font-size: 15px;
 }
 
 .tiptap ol {
@@ -190,16 +212,14 @@
 }
 
 .tiptap-time {
-    position: absolute;
     font-size: 13px;
-    top: 7.5%;
-    left: 0;
-    right: 0;
     margin-left: auto;
     margin-right: auto;
-    padding-top: 2px;
     width: fit-content;
     opacity: 60%;
+    height: 5%;
+    display: flex;
+    align-items: center;
 }
 
 .system-controls-container {

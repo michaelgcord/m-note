@@ -39,6 +39,11 @@ const Tiptap = ({setData} : TiptapProps) : JSX.Element => {
 	const [currentNoteId, setCurrentNoteId] = useState<number | null>(null)
 
 	const editor = useEditor({
+		editorProps: {
+			attributes: {
+			class: 'tiptap-editor',
+			},
+		},		
 		extensions: [
 		  CustomDocument, Tab,
 		  StarterKit.configure({
@@ -90,7 +95,7 @@ const Tiptap = ({setData} : TiptapProps) : JSX.Element => {
 		],
 	})
 
-	// Trigger when a new note is selected
+	// Update note in database when user types into tiptap editor
     useEffect(() => {
         if (!editor) return
         const onUpdate = () => {
@@ -115,15 +120,15 @@ const Tiptap = ({setData} : TiptapProps) : JSX.Element => {
         }
     }, [editor, notesObj])
 
+	// set GlobalEditor inside Notes store
     useEffect(() => {
         if (editor) {
-            console.log('Editor is set...')
             setGlobalEditor(editor)
         }
     }, [])
 
     return (
-		<EditorContent spellCheck="false" className='tiptap-editor' editor={editor} />
+		<EditorContent spellCheck="false" className='tiptap-editor-container' editor={editor} />
     )
 }
 

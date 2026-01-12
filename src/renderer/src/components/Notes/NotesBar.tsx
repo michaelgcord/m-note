@@ -7,7 +7,6 @@ import strikethrough from "../../assets/icons/strikethrough.svg"
 import heading from "../../assets/icons/heading.svg"
 import bulletlist from "../../assets/icons/bullet-list.svg"
 import SystemController from "./SystemController"
-// import Search from "./Search"
 import { useNotesStore } from "@renderer/stores/useNotesStore"
 import { useState } from "react"
 
@@ -113,7 +112,6 @@ const NotesBar = ({file_id, setData} : NotesBarProps) : JSX.Element => {
             <div className="notes-bar-side-group-2">
                 <SystemController/>
             </div>
-            {/* <Search/> */}
         </div>
     )
 }

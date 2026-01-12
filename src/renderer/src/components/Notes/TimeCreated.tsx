@@ -14,28 +14,24 @@ const TimeCreated = () : JSX.Element => {
     const createdText = "Created: " + createdDate + " at " + createdTime
     const editedText = editedDate + " at " + editedTime
 
-    const [show, setShow] = useState<boolean>(false)
+    const [toggleText, setToggleText] = useState<boolean>(false)
 
     const toggle = () => {
-        setShow(!show)
+        setToggleText(!toggleText)
     }
 
-    useEffect(() => {
-        setShow(true)
-    }, [notesObj.note_id])
-
     return (
-        <>
-        {notesObj.note_id ?
-            <div className='tiptap-time unselectable' onClick={toggle}>
-                {show 
-                    ? editedText
-                    : createdText
-                }
-            </div>
-            : <></>
-        }  
-        </>
+        <div className='tiptap-time unselectable'>
+            {notesObj.note_id ?
+                <div onClick={toggle}>
+                    {toggleText 
+                        ? editedText
+                        : createdText
+                    }
+                </div>
+                : <></>
+            }  
+        </div>
     )
 }
 
