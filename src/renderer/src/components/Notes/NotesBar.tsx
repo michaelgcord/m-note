@@ -60,7 +60,8 @@ const NotesBarAddIcon = ({file_id, setData} : NotesBarProps) : JSX.Element => {
     // add a new note to current file
     const handleAddNote = () => {
         if (file_id) {
-            window.api.addNote(file_id)
+            const date = new Date().toISOString()
+            window.api.addNote(file_id, date)
             setData(window.api.getNotes(file_id))
         } else {
             console.log("no file selected")

@@ -62,7 +62,7 @@ const NotesItem = ({id, html_content, last_date_edited, date_created} : NotesIte
         setNotesObj({...notesObj, dateEdited: currentDate})
     }
 
-    // on note update
+    // on note update, set rerender note's date, name, and description
     useEffect(() => {
         if (firstRender) { // skip get date on first render
             setFirstRender(false)
@@ -88,9 +88,16 @@ const NotesItem = ({id, html_content, last_date_edited, date_created} : NotesIte
         initializeDate()
     }, [])
 
-    // Set note id and render its content into editor
-    const handleClick = () => {
-        setNotesObj({...notesObj, note_id: id, setHtml: setHtml, dateEdited: last_date_edited, dateCreated: date_created, isFocused: true})
+    // on first render, select note if it's the first in its list
+    useEffect(() => {
+        if (id === notesObj.first_note_id) {
+            handleClick(false) // set isFocused to false to prevent note stutter
+        }
+    }, [])
+
+    // Set note id and render its content into editor when note is clicked
+    const handleClick = (focus:boolean) => {
+        setNotesObj({...notesObj, note_id: id, setHtml: setHtml, dateEdited: last_date_edited, dateCreated: date_created, isFocused: focus})
         globalEditor.commands.setContent(html)
 
         // Reset tiptap state to start a new fresh history
@@ -105,7 +112,7 @@ const NotesItem = ({id, html_content, last_date_edited, date_created} : NotesIte
     }
 
     return (
-        <div className="notes-menu-item unselectable" onClick={handleClick}>
+        <div className="notes-menu-item unselectable" onClick={() => handleClick(true)}>
             <div className="note-name">{name}</div>
             <div className="note-date">{time} <span className="note-description">{description}</span></div>
             <div className="notes-menu-item-background"

@@ -20,7 +20,7 @@ const Notes = (): JSX.Element => {
     const globalEditor = useNotesStore((state:any) => state.globalEditor)
     const [data, setData] = useState<Array<Notes>>([])
 
-    // fetch the list of notes associated with file id
+    // fetch list of notes any time a file is selected
     useEffect(() => {
         if (notesObj.file_id) {
             const result = window.api.getNotes(notesObj.file_id)
@@ -28,8 +28,10 @@ const Notes = (): JSX.Element => {
 
             // reset tiptap editor if data is empty
             if (result.length === 0) {
-                setNotesObj({...notesObj, note_id: null, setHtml: null, dateEdited: null, dateCreated: null})
+                setNotesObj({...notesObj, note_id: null, first_note_id: null, setHtml: null, dateEdited: null, dateCreated: null})
                 globalEditor.commands.setContent("")
+            } else { // select first note returned in result by default, will trigger useEffect inside notesItem
+                setNotesObj({...notesObj, first_note_id: result[0].id})
             }
         }
     }, [notesObj.file_id])

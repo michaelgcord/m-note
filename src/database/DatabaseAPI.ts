@@ -166,10 +166,10 @@ const getNotes = (folder_id: number) => {
     }
 }
 
-const addNote = (folder_id: number) => {
+const addNote = (folder_id: number, date: string) => {
     try {
-        const insertData = db.prepare("INSERT INTO notes (folder_id, date_created, last_date_edited) VALUES (?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)")
-        insertData.run(folder_id)
+        const insertData = db.prepare("INSERT INTO notes (folder_id, date_created, last_date_edited) VALUES (?, ?, ?)")
+        insertData.run(folder_id, date, date)
         return true
     } catch (err) {
         console.error(err)
