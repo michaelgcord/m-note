@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNotesStore } from '@renderer/stores/useNotesStore'
 
 const TimeCreated = () : JSX.Element => {
