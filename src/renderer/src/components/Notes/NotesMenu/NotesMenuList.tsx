@@ -45,10 +45,7 @@ const NotesMenuList = ({data} : NotesMenuListProps) : JSX.Element => {
                                 last_date_edited={item.last_date_edited}
                                 date_created={item.date_created}
                             />
-                            {index === data.length - 1
-                                ? <></>
-                                : <hr className="notes-divider"/>
-                            }
+                            <hr className="notes-divider" style={{opacity: index === data.length - 1 ? '0' : '25%'}}/>
                         </motion.div>
                     )
                 })}
