@@ -98,7 +98,7 @@ const NotesItem = ({id, html_content, last_date_edited, date_created} : NotesIte
     // Set note id and render its content into editor when note is clicked
     const handleClick = (focus:boolean) => {
         setNotesObj({...notesObj, note_id: id, setHtml: setHtml, dateEdited: last_date_edited, dateCreated: date_created, isFocused: focus})
-        globalEditor.commands.setContent(html)
+        globalEditor.commands.setContent(html, {emitUpdate: false})
 
         // Reset tiptap state to start a new fresh history
         const newEditorState = EditorState.create({

@@ -3,7 +3,7 @@ import { Extension } from '@tiptap/core'
 import Document from '@tiptap/extension-document'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
-import FileHandler from '@tiptap-pro/extension-file-handler'
+import FileHandler from '@tiptap/extension-file-handler'
 import { useEffect, useState } from 'react'
 import { useNotesStore } from '@renderer/stores/useNotesStore'
 
@@ -52,46 +52,57 @@ const Tiptap = ({setData} : TiptapProps) : JSX.Element => {
 			horizontalRule: false,
 			blockquote: false,
 			codeBlock: false,
+			undoRedo: {newGroupDelay: 150}
 		  }),
-		  Image.configure({ inline: true, allowBase64: true }),
-		  FileHandler.configure({
+		Image.configure({ inline: true, allowBase64: true }),
+		FileHandler.configure({
 			allowedMimeTypes: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
 			onDrop: (currentEditor, files, pos) => {
-			  files.forEach(file => {
+			files.forEach(file => {
 				const fileReader = new FileReader()
+
 				fileReader.readAsDataURL(file)
 				fileReader.onload = () => {
-				  currentEditor.chain().insertContentAt(pos, {
+				currentEditor
+					.chain()
+					.insertContentAt(pos, {
 					type: 'image',
 					attrs: {
-					  src: fileReader.result,
+						src: fileReader.result,
 					},
-				  }).focus().run()
+					})
+					.focus()
+					.run()
 				}
-			  })
+			})
 			},
 			onPaste: (currentEditor, files, htmlContent) => {
-			  files.forEach(file => {
+			files.forEach(file => {
 				if (htmlContent) {
-				  // if there is htmlContent, stop manual insertion & let other extensions handle insertion via inputRule
-				  // you could extract the pasted file from this url string and upload it to a server for example
-				  console.log(htmlContent) // eslint-disable-line no-console
-				  return
+				// if there is htmlContent, stop manual insertion & let other extensions handle insertion via inputRule
+				// you could extract the pasted file from this url string and upload it to a server for example
+				console.log(htmlContent) // eslint-disable-line no-console
+				return false
 				}
-	
+
 				const fileReader = new FileReader()
+
 				fileReader.readAsDataURL(file)
 				fileReader.onload = () => {
-				  currentEditor.chain().insertContentAt(currentEditor.state.selection.anchor, {
+				currentEditor
+					.chain()
+					.insertContentAt(currentEditor.state.selection.anchor, {
 					type: 'image',
 					attrs: {
-					  src: fileReader.result,
+						src: fileReader.result,
 					},
-				  }).focus().run()
+					})
+					.focus()
+					.run()
 				}
-			  })
+			})
 			},
-		  }),
+		}),
 		],
 	})
 
