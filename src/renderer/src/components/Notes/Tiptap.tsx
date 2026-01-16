@@ -1,4 +1,4 @@
-import { EditorContent, useEditor } from '@tiptap/react'
+import { EditorContent, useEditor, useEditorState, Editor } from '@tiptap/react'
 import { Extension } from '@tiptap/core'
 import Document from '@tiptap/extension-document'
 import StarterKit from '@tiptap/starter-kit'
@@ -36,6 +36,7 @@ interface TiptapProps {
 const Tiptap = ({setData} : TiptapProps) : JSX.Element => {
     const notesObj = useNotesStore((state:any) => state.notesObj)
     const setGlobalEditor = useNotesStore((state:any) => state.setGlobalEditor)
+	const setGlobalEditorState = useNotesStore((state:any) => state.setGlobalEditorState)
 	const [currentNoteId, setCurrentNoteId] = useState<number | null>(null)
 
 	const editor = useEditor({
@@ -100,10 +101,25 @@ const Tiptap = ({setData} : TiptapProps) : JSX.Element => {
 					.focus()
 					.run()
 				}
+				return
 			})
 			},
 		}),
 		],
+	})
+
+	const editorState = useEditorState({
+		editor,
+		// This function will be called every time the editor state changes
+		selector: ({ editor }: { editor: Editor }) => ({
+		// It will only re-render if the bold or italic state changes
+			isBold: editor.isActive('bold'),
+			isItalic: editor.isActive('italic'),
+			isUnderline: editor.isActive('underline'),
+			isStrike: editor.isActive('strike'),
+			isHeading1: editor.isActive('heading', {level: 1}),
+			isBulletList: editor.isActive('bulletList'),
+		}),
 	})
 
 	// Update note in database when user types into tiptap editor
@@ -116,6 +132,8 @@ const Tiptap = ({setData} : TiptapProps) : JSX.Element => {
 			var sqlDate = date.toISOString();
 			window.api.editNote(notesObj.note_id, sqlDate, html)
 			notesObj.setHtml(html)
+
+			console.log(editorState.isBold)
 
 			if (notesObj.note_id != currentNoteId) {
 				// Move this note to the front of the notes list
@@ -131,7 +149,24 @@ const Tiptap = ({setData} : TiptapProps) : JSX.Element => {
         }
     }, [editor, notesObj])
 
-	// set GlobalEditor inside Notes store
+	/**
+	 * Set editorState in notes store so other components can subscribe
+	 * to state changes. i.e. bold, italic, etc...
+	 */
+	useEffect(() => {
+        if (editor) {
+			setGlobalEditorState({
+				isBold: editorState.isBold,
+				isItalic: editorState.isItalic,
+				isUnderline: editorState.isUnderline,
+				isStrike: editorState.isStrike,
+				isHeading1: editorState.isHeading1,
+				isBulletList: editorState.isBulletList,
+			})
+        }
+	}, [editorState])
+
+	// set editor in notes store
     useEffect(() => {
         if (editor) {
             setGlobalEditor(editor)

@@ -8,7 +8,6 @@ import heading from "../../assets/icons/heading.svg"
 import bulletlist from "../../assets/icons/bullet-list.svg"
 import SystemController from "./SystemController"
 import { useNotesStore } from "@renderer/stores/useNotesStore"
-import { useState } from "react"
 
 interface Notes {
     id: number
@@ -22,13 +21,15 @@ interface NotesBarProps {
     setData: React.Dispatch<React.SetStateAction<Notes[]>>
 }
 
-const NotesBarIcon = ({height, format}) => {
+interface NotesBarIconProps {
+    height: number
+    format: string
+    isActive: boolean
+}
+
+const NotesBarIcon = ({height, format, isActive} : NotesBarIconProps) => {
     const globalEditor = useNotesStore((state:any) => state.globalEditor)
-    const [toggle, setToggle] = useState<boolean>(false)
-
     const handleClick = (format: string) => {
-        setToggle(!toggle)
-
         if (format === bold) {
             globalEditor.chain().focus().toggleBold().run()
         }
@@ -50,7 +51,7 @@ const NotesBarIcon = ({height, format}) => {
     }
 
     return (
-        <div className="notes-bar-icon-container no-drag" onClick={(() => handleClick(format))} style={{backgroundColor: toggle ? "#eeeeee" : ""}}>
+        <div className="notes-bar-icon-container no-drag" onClick={(() => handleClick(format))} style={{backgroundColor: isActive ? "#eeeeee" : ""}}>
             <img className="notes-bar-icon no-drag" src={format} alt="" height={height}/>
         </div>
     )
@@ -96,6 +97,8 @@ const NotesBarDeleteIcon = ({file_id, setData} : NotesBarProps) : JSX.Element =>
 }
 
 const NotesBar = ({file_id, setData} : NotesBarProps) : JSX.Element => {
+    const globalEditorState = useNotesStore((state:any) => state.globalEditorState)
+
     return (
         <div className="notes-bar drag">
             <div className="notes-bar-side-group-1">
@@ -103,12 +106,12 @@ const NotesBar = ({file_id, setData} : NotesBarProps) : JSX.Element => {
                 <NotesBarDeleteIcon file_id={file_id} setData={setData}/>
             </div>
             <div className="notes-bar-middle-group">
-                <NotesBarIcon format={bold} height={18}/>
-                <NotesBarIcon format={italic} height={18}/>
-                <NotesBarIcon format={underline} height={17}/>
-                <NotesBarIcon format={strikethrough} height={18}/>
-                <NotesBarIcon format={heading} height={18}/>
-                <NotesBarIcon format={bulletlist} height={17}/>
+                <NotesBarIcon format={bold} height={18} isActive={globalEditorState.isBold}/>
+                <NotesBarIcon format={italic} height={18} isActive={globalEditorState.isItalic}/>
+                <NotesBarIcon format={underline} height={17} isActive={globalEditorState.isUnderline}/>
+                <NotesBarIcon format={strikethrough} height={18} isActive={globalEditorState.isStrike}/>
+                <NotesBarIcon format={heading} height={18} isActive={globalEditorState.isHeading1}/>
+                <NotesBarIcon format={bulletlist} height={17} isActive={globalEditorState.isBulletList}/>
             </div>
             <div className="notes-bar-side-group-2">
                 <SystemController/>

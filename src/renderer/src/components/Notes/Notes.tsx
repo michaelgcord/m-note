@@ -29,7 +29,7 @@ const Notes = (): JSX.Element => {
             // reset tiptap editor if data is empty
             if (result.length === 0) {
                 setNotesObj({...notesObj, note_id: null, first_note_id: null, setHtml: null, dateEdited: null, dateCreated: null})
-                globalEditor.commands.setContent("")
+                globalEditor.commands.setContent("", {emitUpdate: false})
             } else { // select first note returned in result by default, will trigger useEffect inside notesItem
                 setNotesObj({...notesObj, first_note_id: result[0].id})
             }

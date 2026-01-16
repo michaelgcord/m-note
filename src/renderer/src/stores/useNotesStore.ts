@@ -12,6 +12,15 @@ interface NotesObj {
     isFocused: boolean
 }
 
+interface globalEditorState {
+    isBold: boolean
+    isItalic: boolean
+    isUnderline: boolean
+    isStrike: boolean
+    isHeading1: boolean
+    isBulletList: boolean
+}
+
 export const useNotesStore = create((set) => ({
     notesObj: {
         name: 'M Note', 
@@ -26,5 +35,14 @@ export const useNotesStore = create((set) => ({
     setNotesObj: (value : NotesObj) => {set({notesObj: value})},
 
     globalEditor: null,
-    setGlobalEditor: (value: Editor | null) => {set({globalEditor: value})}
+    setGlobalEditor: (value: Editor | null) => {set({globalEditor: value})},
+    globalEditorState: {
+        isBold: false,
+        isItalic: false,
+        isUnderline: false,
+        isStrike: false,
+        isHeading1: false,
+        isBulletList: false,        
+    },
+    setGlobalEditorState: (value: globalEditorState) => {set({globalEditorState: value})},
 }))
