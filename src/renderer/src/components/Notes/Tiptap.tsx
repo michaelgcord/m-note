@@ -49,6 +49,7 @@ const Tiptap = ({setData} : TiptapProps) : JSX.Element => {
 		  CustomDocument, Tab,
 		  StarterKit.configure({
 			document: false,
+			trailingNode: false,
 			orderedList: false,
 			horizontalRule: false,
 			blockquote: false,
@@ -132,8 +133,6 @@ const Tiptap = ({setData} : TiptapProps) : JSX.Element => {
 			var sqlDate = date.toISOString();
 			window.api.editNote(notesObj.note_id, sqlDate, html)
 			notesObj.setHtml(html)
-
-			console.log(editorState.isBold)
 
 			if (notesObj.note_id != currentNoteId) {
 				// Move this note to the front of the notes list
