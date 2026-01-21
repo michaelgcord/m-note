@@ -1,6 +1,6 @@
 ## M Note
 
-> A fast, light-weight desktop notes application for Windows and Mac.
+> A fast, light-weight desktop notes application for Windows.
 > Built with React, Typescript, and Electron.
 <br>
 
@@ -9,7 +9,5 @@ are heavily inspired by VSCode and Notes for macOS.
 
 ## Getting Started
 
-Head over to the landing page to download the installer.
-- .exe (windows)
-- .dmg (mac)
+Head over to the releases page to download the installer.
 
