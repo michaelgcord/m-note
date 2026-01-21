@@ -1,5 +1,5 @@
 appId: com.electron.app
-productName: m-note
+productName: M Note
 directories:
   buildResources: build
 files:
@@ -12,7 +12,7 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: m-note
+  executableName: M Note
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

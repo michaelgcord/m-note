@@ -1,9 +1,9 @@
 {
   "name": "m-note",
   "version": "1.0.0",
-  "description": "An Electron application with React and TypeScript",
+  "description": "A notes app built with React and TypeScript",
   "main": "./out/main/index.js",
-  "author": "example.com",
+  "author": "Michael Cordero",
   "homepage": "https://electron-vite.org",
   "scripts": {
     "format": "prettier --write .",
