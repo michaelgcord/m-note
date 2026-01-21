@@ -18,9 +18,9 @@ const Tab = Extension.create({
 	}
   })
 
-const CustomDocument = Document.extend({
-	content: 'heading block*',
-  })
+// const CustomDocument = Document.extend({
+// 	content: 'heading block*',
+//   })
 
 interface Notes {
     id: number
