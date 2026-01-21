@@ -1,6 +1,6 @@
 import { EditorContent, useEditor, useEditorState, Editor } from '@tiptap/react'
 import { Extension } from '@tiptap/core'
-import Document from '@tiptap/extension-document'
+// import Document from '@tiptap/extension-document'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
 import FileHandler from '@tiptap/extension-file-handler'
