@@ -154,7 +154,7 @@
     transition: .1s ease;
 }
 
-.notes-bar-add-container:hover, .notes-bar-delete-container:hover{
+.notes-bar-add-hover:hover, .notes-bar-delete-container:hover{
     background-color: #eeeeee
 }
 

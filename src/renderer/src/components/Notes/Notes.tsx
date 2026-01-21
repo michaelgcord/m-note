@@ -20,6 +20,10 @@ const Notes = (): JSX.Element => {
     const globalEditor = useNotesStore((state:any) => state.globalEditor)
     const [data, setData] = useState<Array<Notes>>([])
 
+    useEffect(() => {
+        setNotesObj({...notesObj, setData: setData})
+    }, [])
+
     // fetch list of notes any time a file is selected
     useEffect(() => {
         if (notesObj.file_id) {
@@ -30,7 +34,7 @@ const Notes = (): JSX.Element => {
             if (result.length === 0) {
                 setNotesObj({...notesObj, note_id: null, first_note_id: null, setHtml: null, dateEdited: null, dateCreated: null})
                 globalEditor.commands.setContent("", {emitUpdate: false})
-            } else { // select first note returned in result by default, will trigger useEffect inside notesItem
+            } else { // select first note by default, will trigger useEffect inside notesItem
                 setNotesObj({...notesObj, first_note_id: result[0].id})
             }
         }

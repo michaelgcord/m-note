@@ -8,6 +8,7 @@ import heading from "../../assets/icons/heading.svg"
 import bulletlist from "../../assets/icons/bullet-list.svg"
 import SystemController from "./SystemController"
 import { useNotesStore } from "@renderer/stores/useNotesStore"
+import { useEffect, useState } from "react"
 
 interface Notes {
     id: number
@@ -29,6 +30,10 @@ interface NotesBarIconProps {
 
 const NotesBarIcon = ({height, format, isActive} : NotesBarIconProps) => {
     const globalEditor = useNotesStore((state:any) => state.globalEditor)
+
+    const notesClassesOn = "notes-bar-icon-container no-drag"
+    const notesClassesOff = "notes-bar-icon-container no-drag no-mouse-events"
+
     const handleClick = (format: string) => {
         if (format === bold) {
             globalEditor.chain().focus().toggleBold().run()
@@ -47,43 +52,88 @@ const NotesBarIcon = ({height, format, isActive} : NotesBarIconProps) => {
         }
         if (format === bulletlist) {
             globalEditor.chain().focus().toggleBulletList().run()
-        }            
+        }
     }
 
     return (
-        <div className="notes-bar-icon-container no-drag" onClick={(() => handleClick(format))} style={{backgroundColor: isActive ? "#eeeeee" : ""}}>
+        <div className={globalEditor ? (globalEditor.isEditable ? notesClassesOn : notesClassesOff) : notesClassesOff} onClick={(() => handleClick(format))} style={{backgroundColor: isActive ? "#eeeeee" : ""}}>
             <img className="notes-bar-icon no-drag" src={format} alt="" height={height}/>
         </div>
     )
 }
 
 const NotesBarAddIcon = ({file_id, setData} : NotesBarProps) : JSX.Element => {
-    // add a new note to current file
+    const newNoteObj = useNotesStore((state:any) => state.newNoteObj)
+    const setNewNoteObj = useNotesStore((state:any) => state.setNewNoteObj)
+    const [isDisabled, setIsDisabled] = useState<boolean>(false)
+    const [classNameList, setClassNameList] = useState<string>("")
+
+    const classNameHover = "notes-bar-add-container notes-bar-add-hover no-drag"
+    const classNameNoHover = "notes-bar-add-container no-mouse-events no-drag"
+
+    useEffect(() =>{
+        if (!isDisabled) {
+            setClassNameList(classNameHover)
+        } else {
+            setClassNameList(classNameNoHover)
+        }
+    }, [isDisabled])
+
+    // Reenable add button
+    useEffect(() => {
+        // when the new note has been edited
+        if (newNoteObj.wasEdited) { 
+            setIsDisabled(false)
+        }
+        // when new note is deleted
+        if (newNoteObj.note_id === null) {
+            setIsDisabled(false)
+        }
+    }, [newNoteObj])
+
+    /**
+     * Add note to current file's note list, and disable add icon button
+     * until new note has been edited.
+     */
     const handleAddNote = () => {
-        if (file_id) {
+        if (file_id && !isDisabled) {
             const date = new Date().toISOString()
-            window.api.addNote(file_id, date)
-            setData(window.api.getNotes(file_id))
+            const note_id = window.api.addNote(file_id, date)
+
+            setNewNoteObj({note_id: note_id, wasEdited: false}) 
+            setData(window.api.getNotes(file_id)) // rerender notes list with new note
+            setIsDisabled(true) // disable add icon
+            console.log('ADD NOTE')
         } else {
             console.log("no file selected")
         }
     }
 
     return (
-        <div className="notes-bar-add-container no-drag">
-            <img className="notes-bar-icon no-drag" onClick={handleAddNote} src={noteAdd} alt="" height={20}/>
+        <div className={classNameList}>
+            <img className="notes-bar-icon no-drag" style={{opacity: isDisabled ? " 30%" : "100%"}} onClick={handleAddNote} src={noteAdd} alt="" height={20}/>
         </div>
     )
 }
 
 const NotesBarDeleteIcon = ({file_id, setData} : NotesBarProps) : JSX.Element => {
     const notesObj = useNotesStore((state:any) => state.notesObj)
+    const setNotesObj = useNotesStore((state:any) => state.setNotesObj)
+    const newNoteObj = useNotesStore((state:any) => state.newNoteObj)
+    const setNewNoteObj = useNotesStore((state:any) => state.setNewNoteObj)
+    const globalEditor = useNotesStore((state:any) => state.globalEditor)
 
-    // TODO: add a confirmation to delete ui
     const handleDeleteNote = () => {
         if (file_id && notesObj.note_id) {
+            if (notesObj.note_id === newNoteObj.note_id) { // reenable add icon if the new note was deleted
+                setNewNoteObj({note_id: null, wasEdited: false})
+            }
             window.api.deleteNote(notesObj.note_id)
             setData(window.api.getNotes(file_id))
+            setNotesObj({...notesObj, note_id: null})
+            if (globalEditor) {
+                globalEditor.commands.clearContent(false)
+            }
         } else {
             console.log("no file selected")
         }

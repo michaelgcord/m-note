@@ -14,9 +14,11 @@ const NotesItem = ({id, html_content, last_date_edited, date_created} : NotesIte
     const notesObj = useNotesStore((state:any) => state.notesObj)
     const setNotesObj = useNotesStore((state:any) => state.setNotesObj)
     const globalEditor = useNotesStore((state:any) => state.globalEditor)
+    const newNoteObj = useNotesStore((state:any) => state.newNoteObj)
+    const setNewNoteObj = useNotesStore((state:any) => state.setNewNoteObj)
     const [html, setHtml] = useState<string>(html_content)
     const [name, setName] = useState<string>('New Note')
-    const [description, setDescription] = useState<string>('No Additional Text')
+    const [description, setDescription] = useState<string>('No additional text')
     const [firstRender, setFirstRender] = useState<boolean>(true)
     const [time, setTime] = useState<string>("")
 
@@ -49,7 +51,7 @@ const NotesItem = ({id, html_content, last_date_edited, date_created} : NotesIte
             setName('New Note')
         }
         if (second === "") {
-            setDescription('No Additional Text')
+            setDescription('No additional text')
         }
         return
     }
@@ -88,15 +90,24 @@ const NotesItem = ({id, html_content, last_date_edited, date_created} : NotesIte
         initializeDate()
     }, [])
 
+    // select new note by default when user creates a new note
+    useEffect(() => {
+        if (id === newNoteObj.note_id && globalEditor) {
+            selectNote(false)
+            globalEditor.commands.focus('start')
+        }
+    }, [])
+
     // on first render, select note if it's the first in its list
     useEffect(() => {
         if (id === notesObj.first_note_id) {
-            handleClick(false) // set isFocused to false to prevent note stutter
+            selectNote(false) // set isFocused to false to prevent note stutter
         }
     }, [])
 
     // Set note id and render its content into editor when note is clicked
-    const handleClick = (focus:boolean) => {
+    const selectNote = (focus:boolean) => {
+        // set note object with current note data and load content into tiptap editor
         setNotesObj({...notesObj, note_id: id, setHtml: setHtml, dateEdited: last_date_edited, dateCreated: date_created, isFocused: focus})
         globalEditor.commands.setContent(html, {emitUpdate: false})
 
@@ -108,11 +119,18 @@ const NotesItem = ({id, html_content, last_date_edited, date_created} : NotesIte
         })
         globalEditor.view.updateState(newEditorState);
 
+        // delete new note and reset add icon if a different note is selected before the new note has been edited
+        if (newNoteObj.note_id != id && !newNoteObj.wasEdited) {
+            window.api.deleteNote(newNoteObj.note_id)
+            notesObj.setData(window.api.getNotes(notesObj.file_id))
+            setNewNoteObj({note_id: null, wasEdited: false})
+        }
+
         console.log('Note id has been set.')
     }
 
     return (
-        <div className="notes-menu-item unselectable" onClick={() => handleClick(true)}>
+        <div className="notes-menu-item unselectable" onClick={() => selectNote(true)}>
             <div className="note-name">{name}</div>
             <div className="note-date">{time} <span className="note-description">{description}</span></div>
             <div className="notes-menu-item-background"

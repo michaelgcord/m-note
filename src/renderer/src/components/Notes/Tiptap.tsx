@@ -37,6 +37,8 @@ const Tiptap = ({setData} : TiptapProps) : JSX.Element => {
     const notesObj = useNotesStore((state:any) => state.notesObj)
     const setGlobalEditor = useNotesStore((state:any) => state.setGlobalEditor)
 	const setGlobalEditorState = useNotesStore((state:any) => state.setGlobalEditorState)
+    const newNoteObj = useNotesStore((state:any) => state.newNoteObj)
+    const setNewNoteObj = useNotesStore((state:any) => state.setNewNoteObj)	
 	const [currentNoteId, setCurrentNoteId] = useState<number | null>(null)
 
 	const editor = useEditor({
@@ -46,9 +48,9 @@ const Tiptap = ({setData} : TiptapProps) : JSX.Element => {
 			},
 		},		
 		extensions: [
-		  CustomDocument, Tab,
+		  Tab,
 		  StarterKit.configure({
-			document: false,
+			// document: false,
 			trailingNode: false,
 			orderedList: false,
 			horizontalRule: false,
@@ -114,32 +116,36 @@ const Tiptap = ({setData} : TiptapProps) : JSX.Element => {
 		// This function will be called every time the editor state changes
 		selector: ({ editor }: { editor: Editor }) => ({
 		// It will only re-render if the bold or italic state changes
-			isBold: editor.isActive('bold'),
-			isItalic: editor.isActive('italic'),
-			isUnderline: editor.isActive('underline'),
-			isStrike: editor.isActive('strike'),
-			isHeading1: editor.isActive('heading', {level: 1}),
-			isBulletList: editor.isActive('bulletList'),
+			isBold: editor.isActive('bold') && editor.isEditable,
+			isItalic: editor.isActive('italic') && editor.isEditable,
+			isUnderline: editor.isActive('underline') && editor.isEditable,
+			isStrike: editor.isActive('strike') && editor.isEditable,
+			isHeading1: editor.isActive('heading', {level: 1}) && editor.isEditable,
+			isBulletList: editor.isActive('bulletList') && editor.isEditable,
 		}),
 	})
 
-	// Update note in database when user types into tiptap editor
     useEffect(() => {
-        if (!editor) return
+		if (!editor) return
         const onUpdate = () => {
-            if (!notesObj.note_id) return
-			const html = editor.getHTML()
-			const date = new Date()
-			var sqlDate = date.toISOString();
-			window.api.editNote(notesObj.note_id, sqlDate, html)
-			notesObj.setHtml(html)
+			if (!notesObj.note_id) return
+				// Update note into database and reflect changes back into notesItem 
+				const html = editor.getHTML()
+				const date = new Date()
+				var sqlDate = date.toISOString();
+				window.api.editNote(notesObj.note_id, sqlDate, html)
+				notesObj.setHtml(html)
 
-			if (notesObj.note_id != currentNoteId) {
-				// Move this note to the front of the notes list
-				setCurrentNoteId(notesObj.note_id)
-				setData(window.api.getNotes(notesObj.file_id))
+				// Move current note to the front of notesMenuList
+				if (notesObj.note_id != currentNoteId) {
+					setCurrentNoteId(notesObj.note_id)
+					setData(window.api.getNotes(notesObj.file_id))
+				}
+
+				// Reenable add icon if the current note is a new note
+				if (notesObj.note_id === newNoteObj.note_id) {
+					setNewNoteObj({...newNoteObj, wasEdited: true})
 			}
-
         }
         editor.on('update', onUpdate)
 
@@ -171,6 +177,16 @@ const Tiptap = ({setData} : TiptapProps) : JSX.Element => {
             setGlobalEditor(editor)
         }
     }, [])
+
+	useEffect(() => {
+		if (editor) {
+			if (!notesObj.note_id) {
+				editor.setEditable(false, false)
+			} else {
+				editor.setEditable(true, false)
+			}
+		}
+	}, [notesObj.note_id])
 
     return (
 		<EditorContent spellCheck="false" className='tiptap-editor-container' editor={editor} />

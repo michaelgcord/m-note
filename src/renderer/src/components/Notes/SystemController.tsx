@@ -15,11 +15,11 @@ const SystemController = () : JSX.Element => {
     }
 
     const setMinimize = (value:boolean) => {
-        if (value) {
-            console.log('true')
-        } else {
-            console.log('false')
-        }
+        // if (value) {
+        //     console.log('true')
+        // } else {
+        //     console.log('false')
+        // }
         setIsHoverMin(value)
     }
 

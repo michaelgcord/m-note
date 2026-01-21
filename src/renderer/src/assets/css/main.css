@@ -31,3 +31,7 @@ h1 {
 .no-drag {
   -webkit-app-region: no-drag;
 }
+
+.no-mouse-events {
+  pointer-events: none;
+}

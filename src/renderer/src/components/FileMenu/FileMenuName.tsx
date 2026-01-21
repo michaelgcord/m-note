@@ -42,6 +42,8 @@ const FileMenuName = ({id, parent_id, setParentData, type, name, open, setOpen, 
     const setMouseObj = useFileMenuStore((state:any) => state.setMouseObj)
     const contextMenuObj = useFileMenuStore((state:any) => state.contextMenuObj)
     const setContextMenuObj = useFileMenuStore((state:any) => state.setContextMenuObj)
+    const newNoteObj = useNotesStore((state:any) => state.newNoteObj)
+    const setNewNoteObj = useNotesStore((state:any) => state.setNewNoteObj)
     const [checkMove, setCheckMove] = useState<Move>({x: 0, y: 0, isLeftMouseDown: false})
     const [wasDragging, setWasDragging] = useState<boolean>(false)
 
@@ -100,6 +102,12 @@ const FileMenuName = ({id, parent_id, setParentData, type, name, open, setOpen, 
 
         // select file and fetch notes associated to file id inside notes menu
         if (type === 'file') {
+             // delete new note and reset add icon if a different file is selected before the new note has been edited
+            if (newNoteObj.note_id && !newNoteObj.wasEdited) {
+                window.api.deleteNote(newNoteObj.note_id)
+                setNewNoteObj({note_id: null, wasEdited: false})
+            }
+
             setNotesObj({...notesObj, name: name, file_id: id})
         }
     }

@@ -1,6 +1,13 @@
 import {create} from "zustand"
 import { Editor } from "@tiptap/react"
 
+interface Notes {
+    id: number
+    html_content: string
+    last_date_edited: string
+    date_created: string
+}
+
 interface NotesObj {
     name: string
     file_id: number | null
@@ -10,6 +17,12 @@ interface NotesObj {
     dateEdited: string | null
     dateCreated: string | null
     isFocused: boolean
+    setData: React.Dispatch<React.SetStateAction<Notes[]>> | null
+}
+
+interface newNoteObj {
+    note_id: number | null
+    wasEdited: boolean
 }
 
 interface globalEditorState {
@@ -30,9 +43,16 @@ export const useNotesStore = create((set) => ({
         setHtml: null, 
         dateEdited: null, 
         dateCreated: null, 
-        isFocused: false
+        isFocused: false,
+        setData: null,
     },
     setNotesObj: (value : NotesObj) => {set({notesObj: value})},
+
+    newNoteObj: {
+        note_id: null,
+        wasEdited: false,
+    },
+    setNewNoteObj: (value: newNoteObj) => {set({newNoteObj: value})},
 
     globalEditor: null,
     setGlobalEditor: (value: Editor | null) => {set({globalEditor: value})},
