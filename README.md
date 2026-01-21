@@ -1,34 +1,15 @@
-# m-note
+## M Note
 
-An Electron application with React and TypeScript
+> A fast, light-weight desktop notes application for Windows and Mac.
+> Built with React, Typescript, and Electron.
+<br>
 
-## Recommended IDE Setup
+Hello! Welcome to my landing page. This is a small passion project I built as an alternative to Window's Notepad. It's design and features
+are heavily inspired by VSCode and Notes for macOS.
 
-- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+## Getting Started
 
-## Project Setup
+Head over to the landing page to download the installer.
+- .exe (windows)
+- .dmg (mac)
 
-### Install
-
-```bash
-$ npm install
-```
-
-### Development
-
-```bash
-$ npm run dev
-```
-
-### Build
-
-```bash
-# For windows
-$ npm run build:win
-
-# For macOS
-$ npm run build:mac
-
-# For Linux
-$ npm run build:linux
-```
